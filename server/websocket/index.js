@@ -10,10 +10,28 @@ const rooms = new Map();
 
 // Initialize WebSocket server
 function initializeWebSocketServer(server) {
-  const wss = new WebSocket.Server({ 
+  const wss = new WebSocket.Server({
     server,
     // Path where WebSocket connections will be accepted
-    path: '/ws'
+    path: '/ws',
+    // Add client tracking
+    clientTracking: true,
+    // Add ping interval for connection health checks
+    perMessageDeflate: {
+      zlibDeflateOptions: {
+        chunkSize: 1024,
+        memLevel: 7,
+        level: 3
+      },
+      zlibInflateOptions: {
+        chunkSize: 10 * 1024
+      },
+      clientNoContextTakeover: true,
+      serverNoContextTakeover: true,
+      serverMaxWindowBits: 10,
+      concurrencyLimit: 10,
+      threshold: 1024
+    }
   });
 
   console.log('WebSocket server initialized');
@@ -22,26 +40,26 @@ function initializeWebSocketServer(server) {
   wss.on('connection', function connection(ws, req) {
     // Generate a unique client ID
     const clientId = uuidv4();
-    
+
     // Parse URL to get query parameters
     const url = new URL(req.url, `http://${req.headers.host}`);
     const token = url.searchParams.get('token');
 
     // Authenticate user
     let user = null;
-    
+
     try {
       if (token) {
         const secret = process.env.JWT_SECRET;
         user = jwt.verify(token, secret);
-        
+
         // Store connection info
         clients.set(ws, {
           id: clientId,
           user: user,
           rooms: new Set()
         });
-        
+
         console.log(`Client connected: ${user.name} (${user._id})`);
       } else {
         // Allow anonymous connections for public areas
@@ -57,7 +75,7 @@ function initializeWebSocketServer(server) {
       ws.close(4001, 'Authentication failed');
       return;
     }
-    
+
     // Send initial connection confirmation
     sendMessage(ws, {
       type: 'connection',
@@ -66,7 +84,7 @@ function initializeWebSocketServer(server) {
       role: user ? user.role : 'guest',
       timestamp: new Date().toISOString()
     });
-    
+
     // Message handler
     ws.on('message', function incoming(message) {
       try {
@@ -85,19 +103,19 @@ function initializeWebSocketServer(server) {
     // Handle disconnections
     ws.on('close', function close() {
       const clientInfo = clients.get(ws);
-      
+
       if (clientInfo) {
         // Leave all rooms
         for (const room of clientInfo.rooms) {
           leaveRoom(ws, room);
         }
-        
+
         if (clientInfo.user) {
           console.log(`Client disconnected: ${clientInfo.user.name} (${clientInfo.user._id})`);
         } else {
           console.log(`Anonymous client disconnected: ${clientInfo.id}`);
         }
-        
+
         // Remove from clients map
         clients.delete(ws);
       }
@@ -110,23 +128,23 @@ function initializeWebSocketServer(server) {
       if (ws.isAlive === false) {
         return ws.terminate();
       }
-      
+
       ws.isAlive = false;
-      ws.ping(() => {});
+      ws.ping(() => { });
     });
   }, 30000);
 
   wss.on('close', function close() {
     clearInterval(interval);
   });
-  
+
   return wss;
 }
 
 // Handler for incoming messages
 function handleMessage(ws, data) {
   const clientInfo = clients.get(ws);
-  
+
   if (!clientInfo) {
     console.warn('Message from unregistered client');
     return;
@@ -136,25 +154,25 @@ function handleMessage(ws, data) {
     case 'joinRoom':
       joinRoom(ws, data.roomId);
       break;
-      
+
     case 'leaveRoom':
       leaveRoom(ws, data.roomId);
       break;
-      
+
     case 'chatMessage':
       // Save message to database first if needed
       // Then broadcast to room members
       handleChatMessage(ws, data.message);
       break;
-      
+
     case 'markRead':
       markMessageAsRead(ws, data.messageId);
       break;
-      
+
     case 'requestStatus':
       sendChatStatus(ws);
       break;
-      
+
     default:
       console.warn(`Unknown message type: ${data.type}`);
   }
@@ -163,9 +181,9 @@ function handleMessage(ws, data) {
 // Join a room
 function joinRoom(ws, roomId) {
   const clientInfo = clients.get(ws);
-  
+
   if (!clientInfo) return;
-  
+
   // Check if user has permission to join this room
   if (roomId === 'admin-notifications' && (!clientInfo.user || clientInfo.user.role !== 'admin')) {
     sendMessage(ws, {
@@ -175,45 +193,45 @@ function joinRoom(ws, roomId) {
     });
     return;
   }
-  
+
   // Add client to room
   if (!rooms.has(roomId)) {
     rooms.set(roomId, new Set());
   }
-  
+
   rooms.get(roomId).add(ws);
   clientInfo.rooms.add(roomId);
-  
+
   sendMessage(ws, {
     type: 'roomJoined',
     roomId,
     timestamp: new Date().toISOString()
   });
-  
+
   console.log(`Client ${clientInfo.user ? clientInfo.user._id : clientInfo.id} joined room: ${roomId}`);
 }
 
 // Leave a room
 function leaveRoom(ws, roomId) {
   const clientInfo = clients.get(ws);
-  
+
   if (!clientInfo) return;
-  
+
   if (rooms.has(roomId)) {
     rooms.get(roomId).delete(ws);
     clientInfo.rooms.delete(roomId);
-    
+
     // Delete room if empty
     if (rooms.get(roomId).size === 0) {
       rooms.delete(roomId);
     }
-    
+
     sendMessage(ws, {
       type: 'roomLeft',
       roomId,
       timestamp: new Date().toISOString()
     });
-    
+
     console.log(`Client ${clientInfo.user ? clientInfo.user._id : clientInfo.id} left room: ${roomId}`);
   }
 }
@@ -221,11 +239,11 @@ function leaveRoom(ws, roomId) {
 // Handle chat messages
 function handleChatMessage(ws, message) {
   const clientInfo = clients.get(ws);
-  
+
   if (!clientInfo) return;
-  
+
   const now = new Date();
-  
+
   // Add additional info to message
   const enhancedMessage = {
     ...message,
@@ -233,7 +251,7 @@ function handleChatMessage(ws, message) {
     senderName: clientInfo.user ? clientInfo.user.name : 'Guest',
     timestamp: now.toISOString()
   };
-  
+
   // Broadcast to chat room members
   broadcastToRoom('chat', {
     type: 'chatMessage',
@@ -245,7 +263,7 @@ function handleChatMessage(ws, message) {
 // Mark message as read
 async function markMessageAsRead(ws, messageId) {
   const clientInfo = clients.get(ws);
-  
+
   if (!clientInfo || !clientInfo.user) {
     sendMessage(ws, {
       type: 'error',
@@ -254,18 +272,18 @@ async function markMessageAsRead(ws, messageId) {
     });
     return;
   }
-  
+
   try {
     // Here you would update your database to mark the message as read
     // For example:
     // await Message.findByIdAndUpdate(messageId, { read: true });
-    
+
     sendMessage(ws, {
       type: 'messageRead',
       messageId,
       timestamp: new Date().toISOString()
     });
-    
+
     console.log(`Message ${messageId} marked as read by ${clientInfo.user._id}`);
   } catch (error) {
     console.error('Error marking message as read:', error);
@@ -281,19 +299,19 @@ async function markMessageAsRead(ws, messageId) {
 function sendChatStatus(ws) {
   // Check how many admin/support staff are online
   let supportOnline = false;
-  
+
   for (const [client, info] of clients.entries()) {
-    if (client.readyState === WebSocket.OPEN && 
-        info.user && 
-        (info.user.role === 'admin' || info.user.role === 'support')) {
+    if (client.readyState === WebSocket.OPEN &&
+      info.user &&
+      (info.user.role === 'admin' || info.user.role === 'support')) {
       supportOnline = true;
       break;
     }
   }
-  
+
   sendMessage(ws, {
     type: 'statusUpdate',
-    status: supportOnline ? 'online' : 'offline', 
+    status: supportOnline ? 'online' : 'offline',
     timestamp: new Date().toISOString()
   });
 }
@@ -308,7 +326,7 @@ function sendMessage(ws, data) {
 // Broadcast a message to all clients in a room
 function broadcastToRoom(roomId, data, excludeClient = null) {
   if (!rooms.has(roomId)) return;
-  
+
   rooms.get(roomId).forEach(client => {
     if (client !== excludeClient && client.readyState === WebSocket.OPEN) {
       client.send(JSON.stringify(data));

@@ -24,7 +24,7 @@ const websocketService = {
       }
 
       const token = localStorage.getItem('token');
-      
+
       // Skip WebSocket setup if no token is available
       if (!token) {
         console.warn('No authentication token available for WebSocket connection');
@@ -35,7 +35,7 @@ const websocketService = {
       // Instead of checking backend availability which causes connection errors,
       // simply start the connection process directly
       this.initiateWebSocketConnection(token);
-      
+
       return websocket;
     } catch (error) {
       console.error('Error connecting to WebSocket:', error);
@@ -43,26 +43,32 @@ const websocketService = {
       return null;
     }
   },
-  
+
   initiateWebSocketConnection(token) {
     // Close existing connection if any
     if (websocket && websocket.readyState !== WebSocket.CLOSED) {
       websocket.close(1000, 'Reconnecting');
     }
-    
+
     // Get WebSocket URL from environment or use default
     let WS_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:5000/ws';
-    
+
     // Check if we're using HTTPS, if so, use secure WebSocket
     if (window.location.protocol === 'https:') {
       WS_URL = WS_URL.replace('ws://', 'wss://');
+    } else {
+      // Ensure we're using ws:// for non-HTTPS connections
+      WS_URL = WS_URL.replace('wss://', 'ws://');
     }
-    
+
+    // Remove any trailing slashes
+    WS_URL = WS_URL.replace(/\/+$/, '');
+
     console.info('Connecting to WebSocket at:', WS_URL);
-    
+
     try {
       websocket = new WebSocket(`${WS_URL}?token=${token}`);
-      
+
       // Set a connection timeout
       const connectionTimeout = setTimeout(() => {
         if (websocket && websocket.readyState !== WebSocket.OPEN) {
@@ -82,12 +88,12 @@ const websocketService = {
       websocket.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
-          
+
           // Route messages based on their type
           if (data.type) {
             this.triggerEvent(data.type, data);
           }
-          
+
           // Always trigger the generic message event as well
           this.triggerEvent('message', data);
         } catch (err) {
@@ -98,12 +104,12 @@ const websocketService = {
       websocket.onclose = (e) => {
         clearTimeout(connectionTimeout);
         console.info('WebSocket disconnected:', e.reason);
-        this.triggerEvent('connection', { 
-          status: 'disconnected', 
-          code: e.code, 
-          reason: e.reason 
+        this.triggerEvent('connection', {
+          status: 'disconnected',
+          code: e.code,
+          reason: e.reason
         });
-        
+
         // Attempt to reconnect unless the connection was closed intentionally
         // or we've reached max reconnect attempts
         if (e.code !== 1000 && reconnectAttempts < maxReconnectAttempts && !forcedOffline) {
@@ -111,14 +117,14 @@ const websocketService = {
           console.info(`Reconnecting... (Attempt ${reconnectAttempts}/${maxReconnectAttempts})`);
           setTimeout(() => this.connect(), reconnectDelay * reconnectAttempts);
         }
-        
+
         // If we've hit the max reconnect attempts, stop trying and mark as offline
         if (reconnectAttempts >= maxReconnectAttempts) {
           console.warn('Maximum reconnection attempts reached, marking backend as unavailable');
           forcedOffline = true;
-          this.triggerEvent('connection', { 
-            status: 'unavailable', 
-            reason: 'Maximum reconnection attempts reached' 
+          this.triggerEvent('connection', {
+            status: 'unavailable',
+            reason: 'Maximum reconnection attempts reached'
           });
         }
       };
@@ -133,14 +139,14 @@ const websocketService = {
       this.triggerEvent('error', { error });
     }
   },
-  
+
   disconnect() {
     if (websocket) {
       websocket.close(1000, 'User initiated disconnect');
       websocket = null;
     }
   },
-  
+
   send(data) {
     if (websocket && websocket.readyState === WebSocket.OPEN) {
       websocket.send(JSON.stringify(data));
@@ -160,7 +166,7 @@ const websocketService = {
     // If we've determined backend is offline, fail silently
     return false;
   },
-  
+
   isConnected() {
     return websocket && websocket.readyState === WebSocket.OPEN;
   },
@@ -171,19 +177,19 @@ const websocketService = {
       eventListeners[eventType] = [];
     }
     eventListeners[eventType].push(callback);
-    
+
     // Return an unsubscribe function
     return () => {
       this.off(eventType, callback);
     };
   },
-  
+
   off(eventType, callback) {
     if (eventListeners[eventType]) {
       eventListeners[eventType] = eventListeners[eventType].filter(cb => cb !== callback);
     }
   },
-  
+
   triggerEvent(eventType, data) {
     if (eventListeners[eventType]) {
       eventListeners[eventType].forEach(callback => {
@@ -195,7 +201,7 @@ const websocketService = {
       });
     }
   },
-  
+
   // Specific message senders with error handling
   sendChatMessage(message) {
     return this.send({
@@ -203,27 +209,27 @@ const websocketService = {
       message
     });
   },
-  
+
   requestStatusUpdate() {
     return this.send({
       type: 'requestStatus'
     });
   },
-  
+
   markMessageAsRead(messageId) {
     return this.send({
       type: 'markRead',
       messageId
     });
   },
-  
+
   joinRoom(roomId) {
     return this.send({
       type: 'joinRoom',
       roomId
     });
   },
-  
+
   leaveRoom(roomId) {
     return this.send({
       type: 'leaveRoom',
