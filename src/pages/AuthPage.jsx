@@ -66,9 +66,9 @@ const AuthPage = () => {
 
             // Redirect based on role
             if (response.data.user.role === 'admin') {
-              setTimeout(() => navigate('/admin'), 1500);
+              setTimeout(() => navigate('/admin'), 15000);
             } else {
-              setTimeout(() => navigate('/'), 1500);
+              setTimeout(() => navigate('/'), 15000);
             }
           }
         } catch (err) {
@@ -151,7 +151,7 @@ const AuthPage = () => {
       // First check if server is responsive
       let serverAvailable = false;
       try {
-        await axios.get(`${API_BASE_URL}/health`, { timeout: 3000 });
+        await axios.get(`${API_BASE_URL}/health`, { timeout: 15000 });
         serverAvailable = true;
       } catch (healthError) {
         console.error('Server health check failed:', healthError);
@@ -175,10 +175,10 @@ const AuthPage = () => {
           // Role-based redirection - strict separation
           if (response.data.user.role === 'admin') {
             setSuccess('Admin login successful! Redirecting to admin panel...');
-            setTimeout(() => navigate('/admin'), 1500);
+            setTimeout(() => navigate('/admin'), 3000);
           } else {
             setSuccess('Login successful! Redirecting...');
-            setTimeout(() => navigate('/'), 1500);
+            setTimeout(() => navigate('/'), 3000);
           }
         } else {
           throw new Error('Invalid response from server');
@@ -200,10 +200,10 @@ const AuthPage = () => {
           login(response.data.user);
 
           setSuccess('Account created successfully! Redirecting...');
-          setTimeout(() => navigate('/'), 1500);
+          setTimeout(() => navigate('/'), 3000);
         } else if (response.data && response.data.success) {
           setSuccess('Registration successful! Please login to continue.');
-          setTimeout(() => navigate('/login'), 1500);
+          setTimeout(() => navigate('/login'), 3000);
         } else {
           throw new Error('Failed to register');
         }

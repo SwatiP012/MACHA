@@ -30,7 +30,10 @@ function startServer() {
 
   // Middleware
   app.use(cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    origin: [
+      'http://localhost:5173',
+      'https://swatip012.github.io',
+    ],
     credentials: true
   }));
   app.use(express.json());
