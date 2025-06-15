@@ -392,11 +392,10 @@ const Gallery = () => {
                         setCurrentCategory(category.id);
                         setShowCategoryFilter(false);
                       }}
-                      className={`w-full text-left px-3 py-2 rounded-md mb-1 last:mb-0 ${
-                        currentCategory === category.id
-                          ? 'bg-gradient-to-r from-green-600 to-black text-white'
-                          : 'hover:bg-green-50 text-slate-700'
-                      }`}
+                      className={`w-full text-left px-3 py-2 rounded-md mb-1 last:mb-0 ${currentCategory === category.id
+                        ? 'bg-gradient-to-r from-green-600 to-black text-white'
+                        : 'hover:bg-green-50 text-slate-700'
+                        }`}
                     >
                       {category.name}
                     </motion.button>
@@ -414,11 +413,10 @@ const Gallery = () => {
                 whileHover="hover"
                 whileTap="tap"
                 onClick={() => setCurrentCategory(category.id)}
-                className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                  currentCategory === category.id
-                    ? 'bg-gradient-to-r from-green-600 to-black text-white shadow-sm'
-                    : 'bg-green-50 border border-green-100 text-green-700 hover:bg-green-100'
-                }`}
+                className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 ${currentCategory === category.id
+                  ? 'bg-gradient-to-r from-green-600 to-black text-white shadow-sm'
+                  : 'bg-green-50 border border-green-100 text-green-700 hover:bg-green-100'
+                  }`}
               >
                 {category.name}
               </motion.button>
@@ -444,7 +442,7 @@ const Gallery = () => {
                   onTouchMove={handleTouchMove}
                   onTouchEnd={handleTouchEnd}
                 >
-                  <AnimatePresence mode="wait">
+                  <AnimatePresence mode="sync">
                     <motion.div
                       key={currentCategory + currentIndex}
                       className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
@@ -600,11 +598,10 @@ const Gallery = () => {
                 whileHover={{ scale: 1.2 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setCurrentIndex(index)}
-                className={`transition-all ${
-                  currentIndex === index
-                    ? 'w-8 h-2.5 bg-gradient-to-r from-green-600 to-black rounded-full'
-                    : 'w-2.5 h-2.5 bg-slate-300 hover:bg-slate-400 rounded-full'
-                }`}
+                className={`transition-all ${currentIndex === index
+                  ? 'w-8 h-2.5 bg-gradient-to-r from-green-600 to-black rounded-full'
+                  : 'w-2.5 h-2.5 bg-slate-300 hover:bg-slate-400 rounded-full'
+                  }`}
                 aria-label={`Go to slide ${index + 1}`}
               />
             ))}

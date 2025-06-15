@@ -249,7 +249,7 @@ const Hero = ({ darkMode }) => {
       <div className="container-custom relative z-10 py-20">
         <div className="flex flex-col lg:flex-row items-center">
           <div className="lg:w-1/2 lg:pr-8">
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="sync">
               <motion.div
                 key={heroSlides[slide].key}
                 initial={{ opacity: 0, y: 30 }}
@@ -267,12 +267,12 @@ const Hero = ({ darkMode }) => {
                 >
                   {/* Background glow effect */}
                   <div className="absolute -inset-1 bg-gradient-to-r from-green-600 to-green-400 rounded-full opacity-75 blur-xl animate-glow"></div>
-                  
+
                   {/* Main badge content - reduced font size */}
                   <div className="relative backdrop-blur-sm bg-black/80 py-2 px-6 rounded-full border-2 border-green-500/50 shadow-lg shadow-green-500/30 flex items-center justify-center transform hover:scale-105 transition-all duration-300">
                     <div className="absolute -left-1 -top-1 w-6 h-6 bg-green-500 rounded-full"></div>
                     <div className="absolute -right-1 -bottom-1 w-6 h-6 bg-green-500 rounded-full"></div>
-                    
+
                     <div className="flex items-center">
                       <span className="text-green-500 text-lg md:text-2xl font-bold mr-2 drop-shadow-[0_0_8px_rgba(34,197,94,0.5)]">#1</span>
                       <span className="text-white text-xl md:text-3xl">Service Provider in Choutuppal</span>
@@ -347,7 +347,7 @@ const Hero = ({ darkMode }) => {
           >
             <div className="bg-white/10 backdrop-filter backdrop-blur-lg p-8 rounded-3xl border border-white/20 shadow-2xl hover:shadow-green-600/10 transition-all duration-500 transform hover:scale-[1.02]">
               <div className="flex flex-col gap-6">
-                <AnimatePresence mode="wait">
+                <AnimatePresence mode="sync">
                   {heroSlides[slide].features.map((feature, idx) => (
                     <motion.div
                       key={feature.title}

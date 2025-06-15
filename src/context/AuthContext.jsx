@@ -63,7 +63,7 @@ export const AuthProvider = ({ children }) => {
       try {
         // Try to check server health first
         try {
-          await axios.get(`${API_BASE_URL}/api/health`, { timeout: 2000 });
+          await axios.get(`${API_BASE_URL}/health`, { timeout: 2000 });
         } catch (healthError) {
           console.warn('Server health check failed, may affect authentication', healthError);
         }

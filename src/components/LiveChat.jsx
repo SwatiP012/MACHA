@@ -37,7 +37,7 @@ const LiveChat = () => {
   useEffect(() => {
     const checkBackendStatus = async () => {
       try {
-        await axios.get(`${API_BASE_URL}/api/health`, { timeout: 3000 });
+        await axios.get(`${API_BASE_URL}/health`, { timeout: 3000 });
         setBackendAvailable(true);
       } catch (err) {
         console.warn("Backend chat server unreachable:", err);
