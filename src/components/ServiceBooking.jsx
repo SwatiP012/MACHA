@@ -365,7 +365,6 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
     if (!formData.service) errors.service = 'Please select a service';
     if (!formData.date) errors.date = 'Date is required';
     if (!formData.time) errors.time = 'Time slot is required';
-    // if (!formData.location) errors.location = 'Location is required';
 
     // Validate address fields
     if (!formData.address.street) errors['address.street'] = 'Street/House No. is required';
@@ -843,7 +842,7 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
                   {/* Map location selector */}
                   <div>
                     <label htmlFor="location" className="block text-gray-700 text-sm font-medium mb-2">
-                      Pin Your Location on Map*<span className="text-gray-500 text-xs">(Optional)</span>
+                      Pin Your Location on Map <span className="text-gray-500 text-xs">(Optional)</span>
                     </label>
                     <div className="relative">
                       <MapPin size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -851,12 +850,11 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
                         type="text"
                         id="location"
                         name="location"
-                        placeholder="Choose your location on map"
+                        placeholder="Choose your location on map (optional)"
                         value={formData.location}
                         readOnly
                         onClick={() => setShowLocationModal(true)}
-                        className={`w-full pl-10 pr-10 py-3 bg-gray-50 border ${formErrors.location ? 'border-red-300' : 'border-gray-200'
-                          } rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800 placeholder:text-gray-400 cursor-pointer`}
+                        className="w-full pl-10 pr-10 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800 placeholder:text-gray-400 cursor-pointer"
                       />
                       <button
                         type="button"
@@ -867,9 +865,6 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
                         <Navigation size={16} />
                       </button>
                     </div>
-                    {formErrors.location && (
-                      <p className="mt-1 text-red-500 text-xs">{formErrors.location}</p>
-                    )}
                     {coordinates.lat && coordinates.lng && (
                       <p className="mt-1 text-green-600 text-xs flex items-center">
                         <Check size={12} className="mr-1" /> Location selected successfully
@@ -1045,9 +1040,9 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
                                 </div>
                                 <div className="flex items-center gap-2">
                                   <span className={`px-2 py-0.5 text-xs rounded-full ${booking.status === 'completed' ? 'bg-green-100 text-green-800' :
-                                      booking.status === 'cancelled' ? 'bg-red-100 text-red-800' :
-                                        booking.status === 'confirmed' ? 'bg-blue-100 text-blue-800' :
-                                          'bg-yellow-100 text-yellow-800'
+                                    booking.status === 'cancelled' ? 'bg-red-100 text-red-800' :
+                                      booking.status === 'confirmed' ? 'bg-blue-100 text-blue-800' :
+                                        'bg-yellow-100 text-yellow-800'
                                     }`}>
                                     {booking.status}
                                   </span>
