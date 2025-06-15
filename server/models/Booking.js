@@ -56,7 +56,7 @@ const bookingSchema = new mongoose.Schema({
   location: {
     address: {
       type: String,
-      required: true
+      required: false
     },
     coordinates: {
       lat: Number,

@@ -1,17 +1,17 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { 
-  Check, 
-  Clock, 
-  MapPin, 
-  Calendar, 
-  Phone, 
-  Mail, 
-  User, 
-  ChevronDown, 
+import {
+  Check,
+  Clock,
+  MapPin,
+  Calendar,
+  Phone,
+  Mail,
+  User,
+  ChevronDown,
   ChevronUp,
-  X, 
+  X,
   AlertCircle,
   FileText,
   Building,
@@ -66,7 +66,7 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
   const [bookingSuccess, setBookingSuccess] = useState(false);
   const [bookingId, setBookingId] = useState(null);
   const [trackingId, setTrackingId] = useState(null);
-  
+
   // Define API URL
   const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
@@ -81,7 +81,7 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
         setBackendAvailable(false);
       }
     };
-    
+
     checkBackendStatus();
   }, [API_BASE_URL]);
 
@@ -145,11 +145,11 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
     const fetchUserBookings = async () => {
       // Only fetch if user is logged in
       if (!currentUser || !currentUser._id) return;
-      
+
       try {
         setBookingsLoading(true);
         const token = localStorage.getItem('token');
-        
+
         const response = await axios.get(
           `${API_BASE_URL}/bookings/user-bookings?limit=5`,
           {
@@ -158,7 +158,7 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
             }
           }
         );
-        
+
         if (response.data && response.data.success) {
           setUserBookings(response.data.bookings);
         }
@@ -168,7 +168,7 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
         setBookingsLoading(false);
       }
     };
-    
+
     fetchUserBookings();
   }, [currentUser, API_BASE_URL]);
 
@@ -176,40 +176,40 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
   useEffect(() => {
     // Only initialize map if it hasn't already been done
     if (window.mapAlreadyInitialized) return;
-    
+
     // Create safety wrapper function for map initialization
-    window.initGoogleMap = function() {
+    window.initGoogleMap = function () {
       try {
         window.mapAlreadyInitialized = true;
-        
+
         if (!mapRef.current) return;
-        
+
         const mapInstance = new window.google.maps.Map(mapRef.current, {
           center: { lat: 17.3197, lng: 78.8714 }, // Default center (Choutuppal)
           zoom: 13,
           mapTypeControl: false,
         });
-        
+
         mapInstanceRef.current = mapInstance;
-        
+
         if (locationInputRef.current) {
           try {
             const autocomplete = new window.google.maps.places.Autocomplete(
               locationInputRef.current,
               { componentRestrictions: { country: ["in"] } }
             );
-            
-            autocomplete.addListener("place_changed", function() {
+
+            autocomplete.addListener("place_changed", function () {
               try {
                 const place = autocomplete.getPlace();
                 if (!place || !place.geometry || !place.geometry.location) {
                   console.warn("Selected place missing geometry data");
                   return;
                 }
-                
+
                 const lat = place.geometry.location.lat();
                 const lng = place.geometry.location.lng();
-                
+
                 setFormData(prev => ({
                   ...prev,
                   location: {
@@ -218,10 +218,10 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
                     coordinates: { lat, lng },
                   }
                 }));
-                
+
                 mapInstance.setCenter({ lat, lng });
                 mapInstance.setZoom(15);
-                
+
                 if (markerRef.current) {
                   markerRef.current.setPosition({ lat, lng });
                 } else if (window.google && window.google.maps) {
@@ -255,12 +255,12 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
       }
       return;
     }
-    
+
     // Check if script is already being loaded
     if (document.querySelector('script[src*="maps.googleapis.com/maps/api/js"]')) {
       // If the script is loading but not ready yet, set up a callback to run when it's loaded
       const prevInitGoogleMap = window.initGoogleMap;
-      window.initGoogleMap = function() {
+      window.initGoogleMap = function () {
         if (prevInitGoogleMap) prevInitGoogleMap();
         // Our map init code from the effect above
         if (window.google && window.google.maps && mapRef.current) {
@@ -271,7 +271,7 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
               zoom: 13,
               mapTypeControl: false,
             });
-            
+
             mapInstanceRef.current = mapInstance;
           } catch (error) {
             console.error("Error initializing map:", error);
@@ -280,20 +280,20 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
       };
       return;
     }
-    
+
     const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-    
+
     if (!GOOGLE_MAPS_API_KEY) {
       console.error('Google Maps API key is missing from environment variables');
       return;
     }
-    
+
     // Create a global init function
-    window.initGoogleMap = function() {
+    window.initGoogleMap = function () {
       window.mapAlreadyInitialized = true;
       // Map initialization will happen in the other useEffect
     };
-    
+
     // Load the script with correct parameters
     const script = document.createElement('script');
     // Use 'places' only, not 'geometry' as well
@@ -301,12 +301,12 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
     script.async = true;
     script.defer = true;
     document.head.appendChild(script);
-    
+
     return () => {
       // Don't remove the script on unmount as it might be needed by other components
       // Just clean up our specific handlers
       const oldInit = window.initGoogleMap;
-      window.initGoogleMap = function() {
+      window.initGoogleMap = function () {
         if (oldInit && oldInit !== window.initGoogleMap) oldInit();
       };
     };
@@ -314,7 +314,7 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    
+
     // Handle nested address fields
     if (name.startsWith('address.')) {
       const addressField = name.split('.')[1];
@@ -331,7 +331,7 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
         [name]: value,
       });
     }
-    
+
     // Clear error when user starts typing
     if (formErrors[name]) {
       setFormErrors({
@@ -340,7 +340,7 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
       });
     }
   };
-  
+
   // Handle location selection from the map
   const handleLocationSelect = (address, lat, lng) => {
     setFormData({
@@ -365,8 +365,8 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
     if (!formData.service) errors.service = 'Please select a service';
     if (!formData.date) errors.date = 'Date is required';
     if (!formData.time) errors.time = 'Time slot is required';
-   // if (!formData.location) errors.location = 'Location is required';
-    
+    // if (!formData.location) errors.location = 'Location is required';
+
     // Validate address fields
     if (!formData.address.street) errors['address.street'] = 'Street/House No. is required';
     if (!formData.address.area) errors['address.area'] = 'Area/Village is required';
@@ -375,7 +375,7 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
     } else if (!/^\d{6}$/.test(formData.address.pincode)) {
       errors['address.pincode'] = 'Enter a valid 6-digit PIN code';
     }
-    
+
     return errors;
   };
 
@@ -383,7 +383,7 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
     e.preventDefault();
     setIsSubmitting(true);
     setFormError('');
-    
+
     try {
       // Validate form
       const errors = validateForm();
@@ -392,7 +392,7 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
         setIsSubmitting(false);
         return;
       }
-      
+
       // Ensure location is properly formatted
       let locationData = formData.location;
       if (typeof formData.location === 'string') {
@@ -408,14 +408,14 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
           }
         };
       }
-      
+
       // Prepare booking data
       const bookingData = {
         serviceType: formData.service,
         date: formData.date,
         timeSlot: formData.time,
         location: {
-          address: typeof locationData === 'string' ? locationData : locationData.address,
+          address: typeof locationData === 'string' ? locationData : locationData.address || '',
           coordinates: coordinates,
           details: {
             street: formData.address.street || '',
@@ -427,9 +427,9 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
         additionalInfo: formData.message,
         allowDuplicate: confirmDuplicate
       };
-      
+
       console.log('Sending booking data:', bookingData);
-      
+
       // Get token
       const token = localStorage.getItem('token');
       if (!token) {
@@ -438,14 +438,14 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
         navigate('/login');
         return;
       }
-      
+
       // Send booking request
       const response = await axios.post(
         `${API_BASE_URL}/bookings`,
         bookingData,
-        { headers: { Authorization: `Bearer ${token}` }}
+        { headers: { Authorization: `Bearer ${token}` } }
       );
-      
+
       if (response.data && response.data.success) {
         setBookingSuccess(true);
         setBookingId(response.data.booking._id);
@@ -476,11 +476,10 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
   const maxDateString = maxDate.toISOString().split('T')[0];
 
   return (
-    <section 
-      id="booking" 
-      className={`${isStandalone ? 'pt-6' : 'section-padding'} ${
-        isStandalone ? 'bg-gradient-to-br from-green-50 to-green-100' : 'bg-white'
-      }`}
+    <section
+      id="booking"
+      className={`${isStandalone ? 'pt-6' : 'section-padding'} ${isStandalone ? 'bg-gradient-to-br from-green-50 to-green-100' : 'bg-white'
+        }`}
     >
       <div className="container-custom">
         {!isStandalone && (
@@ -514,11 +513,11 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
             </motion.p>
           </div>
         )}
-        
+
         <div className="max-w-4xl mx-auto">
           {/* Success Message */}
           {bookingSuccess && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               className="bg-white border-2 border-green-500 rounded-xl p-8 mb-8 text-center shadow-lg"
@@ -528,7 +527,7 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
               </div>
               <h3 className="text-2xl font-bold text-gray-800 mb-2">Booking Confirmed!</h3>
               <p className="text-gray-600 mb-4">Your service request has been successfully submitted.</p>
-              
+
               <div className="bg-gray-50 p-4 rounded-lg mb-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div className="text-left">
@@ -553,14 +552,14 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
                   </div>
                 </div>
               </div>
-              
+
               <p className="text-gray-600 mb-6">
-                We have sent a confirmation email with all the details. 
+                We have sent a confirmation email with all the details.
                 Our team will contact you shortly to confirm your booking.
               </p>
-              
+
               <div className="flex flex-wrap justify-center gap-4">
-                <button 
+                <button
                   onClick={() => {
                     // Reset form
                     setBookingSuccess(false);
@@ -596,7 +595,7 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
               </div>
             </motion.div>
           )}
-        
+
           {/* Only show the form if booking isn't successful */}
           {!bookingSuccess && (
             <motion.div
@@ -604,9 +603,8 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className={`${
-                isStandalone ? 'bg-white shadow-xl' : 'bg-white shadow-lg'
-              } p-8 rounded-xl border border-gray-100`}
+              className={`${isStandalone ? 'bg-white shadow-xl' : 'bg-white shadow-lg'
+                } p-8 rounded-xl border border-gray-100`}
             >
               {/* Success message */}
               {formSuccess && (
@@ -631,7 +629,7 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
                   </div>
                 </div>
               )}
-              
+
               {/* Form error message */}
               {formError && (
                 <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-center">
@@ -639,7 +637,7 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
                   <p>{formError}</p>
                 </div>
               )}
-              
+
               {/* Duplicate booking confirmation */}
               {showDuplicateConfirmation && (
                 <div className="bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-lg mb-6">
@@ -649,18 +647,18 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
                   </h4>
                   <p className="mb-3">You already have a service booked for this date and time. Would you like to book it anyway?</p>
                   <div className="flex justify-end space-x-3">
-                    <button 
+                    <button
                       type="button"
                       onClick={() => setShowDuplicateConfirmation(false)}
                       className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:bg-gray-50"
                     >
                       Cancel
                     </button>
-                    <button 
+                    <button
                       type="button"
                       onClick={async () => {
                         setShowDuplicateConfirmation(false);
-                        await handleSubmit({ preventDefault: () => {} }, true);
+                        await handleSubmit({ preventDefault: () => { } }, true);
                       }}
                       className="px-3 py-1.5 text-sm bg-amber-600 text-white rounded-lg hover:bg-amber-700"
                     >
@@ -669,13 +667,13 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
                   </div>
                 </div>
               )}
-              
+
               {/* Form content */}
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Personal information */}
                 <div className="space-y-4">
                   <h3 className="text-gray-800 font-semibold text-xl pb-1 border-b border-gray-200">Personal Information</h3>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label htmlFor="name" className="block text-gray-700 text-sm font-medium mb-2">
@@ -690,9 +688,8 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
                           placeholder="Enter your name"
                           value={formData.name}
                           onChange={handleInputChange}
-                          className={`w-full pl-10 pr-4 py-3 bg-white border ${
-                            formErrors.name ? 'border-red-300' : 'border-gray-300'
-                          } rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800 placeholder:text-gray-400`}
+                          className={`w-full pl-10 pr-4 py-3 bg-white border ${formErrors.name ? 'border-red-300' : 'border-gray-300'
+                            } rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800 placeholder:text-gray-400`}
                         />
                       </div>
                       {formErrors.name && (
@@ -713,9 +710,8 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
                           placeholder="Your phone number"
                           value={formData.phone}
                           onChange={handleInputChange}
-                          className={`w-full pl-10 pr-4 py-3 bg-white border ${
-                            formErrors.phone ? 'border-red-300' : 'border-gray-300'
-                          } rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800 placeholder:text-gray-400`}
+                          className={`w-full pl-10 pr-4 py-3 bg-white border ${formErrors.phone ? 'border-red-300' : 'border-gray-300'
+                            } rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800 placeholder:text-gray-400`}
                           maxLength="10"
                         />
                       </div>
@@ -737,9 +733,8 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
                           placeholder="Your email address"
                           value={formData.email}
                           onChange={handleInputChange}
-                          className={`w-full pl-10 pr-4 py-3 bg-white border ${
-                            formErrors.email ? 'border-red-300' : 'border-gray-300'
-                          } rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800 placeholder:text-gray-400`}
+                          className={`w-full pl-10 pr-4 py-3 bg-white border ${formErrors.email ? 'border-red-300' : 'border-gray-300'
+                            } rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800 placeholder:text-gray-400`}
                         />
                       </div>
                       {formErrors.email && (
@@ -748,11 +743,11 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
                     </div>
                   </div>
                 </div>
-                
+
                 {/* Service Details */}
                 <div className="space-y-4">
                   <h3 className="text-gray-800 font-semibold text-xl pb-1 border-b border-gray-200">Service Details</h3>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label htmlFor="service" className="block text-gray-700 text-sm font-medium mb-2">
@@ -767,9 +762,8 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
                           name="service"
                           value={formData.service}
                           onChange={handleInputChange}
-                          className={`w-full pl-10 pr-4 py-3 bg-white border ${
-                            formErrors.service ? 'border-red-300' : 'border-gray-300'
-                          } rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800 appearance-none`}
+                          className={`w-full pl-10 pr-4 py-3 bg-white border ${formErrors.service ? 'border-red-300' : 'border-gray-300'
+                            } rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800 appearance-none`}
                         >
                           <option value="" disabled>Select a service</option>
                           {services.map((service, index) => (
@@ -801,9 +795,8 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
                           onChange={handleInputChange}
                           min={today}
                           max={maxDateString}
-                          className={`w-full pl-10 pr-4 py-3 bg-white border ${
-                            formErrors.date ? 'border-red-300' : 'border-gray-300'
-                          } rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800`}
+                          className={`w-full pl-10 pr-4 py-3 bg-white border ${formErrors.date ? 'border-red-300' : 'border-gray-300'
+                            } rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800`}
                         />
                       </div>
                       {formErrors.date && (
@@ -822,9 +815,8 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
                           name="time"
                           value={formData.time}
                           onChange={handleInputChange}
-                          className={`w-full pl-10 pr-4 py-3 bg-white border ${
-                            formErrors.time ? 'border-red-300' : 'border-gray-300'
-                          } rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800 appearance-none`}
+                          className={`w-full pl-10 pr-4 py-3 bg-white border ${formErrors.time ? 'border-red-300' : 'border-gray-300'
+                            } rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800 appearance-none`}
                         >
                           <option value="" disabled>Select a time slot</option>
                           {timeSlots.map((slot, index) => (
@@ -843,15 +835,15 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
                     </div>
                   </div>
                 </div>
-                
+
                 {/* Location Details */}
                 <div className="space-y-4">
                   <h3 className="text-gray-800 font-semibold text-xl pb-1 border-b border-gray-200">Location Details</h3>
-                  
+
                   {/* Map location selector */}
                   <div>
-                    <label htmlFor="location" className="block text-black text-sm font-medium mb-2">
-                      Pin Your Location on Map*
+                    <label htmlFor="location" className="block text-gray-700 text-sm font-medium mb-2">
+                      Pin Your Location on Map*<span className="text-gray-500 text-xs">(Optional)</span>
                     </label>
                     <div className="relative">
                       <MapPin size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -863,9 +855,8 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
                         value={formData.location}
                         readOnly
                         onClick={() => setShowLocationModal(true)}
-                        className={`w-full pl-10 pr-10 py-3 bg-black border ${
-                          formErrors.location ? 'border-red-300' : 'border-gray-200'
-                        } rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-black placeholder:text-gray-400 cursor-pointer`}
+                        className={`w-full pl-10 pr-10 py-3 bg-gray-50 border ${formErrors.location ? 'border-red-300' : 'border-gray-200'
+                          } rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800 placeholder:text-gray-400 cursor-pointer`}
                       />
                       <button
                         type="button"
@@ -885,7 +876,7 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
                       </p>
                     )}
                   </div>
-                  
+
                   {/* Address details */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
@@ -901,9 +892,8 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
                           placeholder="House number and street name"
                           value={formData.address.street}
                           onChange={handleInputChange}
-                          className={`w-full pl-10 pr-4 py-3 bg-white border ${
-                            formErrors['address.street'] ? 'border-red-300' : 'border-gray-300'
-                          } rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800 placeholder:text-gray-400`}
+                          className={`w-full pl-10 pr-4 py-3 bg-white border ${formErrors['address.street'] ? 'border-red-300' : 'border-gray-300'
+                            } rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800 placeholder:text-gray-400`}
                         />
                       </div>
                       {formErrors['address.street'] && (
@@ -942,9 +932,8 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
                           placeholder="Area, village or town name"
                           value={formData.address.area}
                           onChange={handleInputChange}
-                          className={`w-full pl-10 pr-4 py-3 bg-white border ${
-                            formErrors['address.area'] ? 'border-red-300' : 'border-gray-300'
-                          } rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800 placeholder:text-gray-400`}
+                          className={`w-full pl-10 pr-4 py-3 bg-white border ${formErrors['address.area'] ? 'border-red-300' : 'border-gray-300'
+                            } rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800 placeholder:text-gray-400`}
                         />
                       </div>
                       {formErrors['address.area'] && (
@@ -966,9 +955,8 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
                           value={formData.address.pincode}
                           onChange={handleInputChange}
                           maxLength="6"
-                          className={`w-full pl-10 pr-4 py-3 bg-white border ${
-                            formErrors['address.pincode'] ? 'border-red-300' : 'border-gray-300'
-                          } rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800 placeholder:text-gray-400`}
+                          className={`w-full pl-10 pr-4 py-3 bg-white border ${formErrors['address.pincode'] ? 'border-red-300' : 'border-gray-300'
+                            } rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800 placeholder:text-gray-400`}
                         />
                       </div>
                       {formErrors['address.pincode'] && (
@@ -993,7 +981,7 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
                     className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-800 placeholder:text-gray-400"
                   />
                 </div>
-                
+
                 {/* Booking history section */}
                 {currentUser && userBookings.length > 0 && (
                   <div className="mb-6">
@@ -1014,7 +1002,7 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
                         </>
                       )}
                     </button>
-                    
+
                     {showBookingHistory && (
                       <div className="mt-4 bg-gray-50 rounded-lg p-4 border border-gray-200">
                         <h4 className="font-medium text-gray-800 mb-3">Your Previous Bookings</h4>
@@ -1023,8 +1011,8 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
                         ) : (
                           <div className="space-y-3">
                             {userBookings.map(booking => (
-                              <div 
-                                key={booking._id} 
+                              <div
+                                key={booking._id}
                                 className="bg-white p-3 rounded border border-gray-200 flex justify-between items-center hover:border-green-300 cursor-pointer"
                                 onClick={() => {
                                   // Pre-fill form with this booking's details (except date/time)
@@ -1040,12 +1028,12 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
                                     },
                                     message: formData.message || booking.additionalInfo,
                                   });
-                                  
+
                                   setCoordinates({
                                     lat: booking.location.coordinates?.lat || null,
                                     lng: booking.location.coordinates?.lng || null
                                   });
-                                  
+
                                   setShowBookingHistory(false);
                                 }}
                               >
@@ -1056,12 +1044,11 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
                                   </div>
                                 </div>
                                 <div className="flex items-center gap-2">
-                                  <span className={`px-2 py-0.5 text-xs rounded-full ${
-                                    booking.status === 'completed' ? 'bg-green-100 text-green-800' :
-                                    booking.status === 'cancelled' ? 'bg-red-100 text-red-800' :
-                                    booking.status === 'confirmed' ? 'bg-blue-100 text-blue-800' :
-                                    'bg-yellow-100 text-yellow-800'
-                                  }`}>
+                                  <span className={`px-2 py-0.5 text-xs rounded-full ${booking.status === 'completed' ? 'bg-green-100 text-green-800' :
+                                      booking.status === 'cancelled' ? 'bg-red-100 text-red-800' :
+                                        booking.status === 'confirmed' ? 'bg-blue-100 text-blue-800' :
+                                          'bg-yellow-100 text-yellow-800'
+                                    }`}>
                                     {booking.status}
                                   </span>
                                   <button className="p-1 bg-gray-100 rounded hover:bg-gray-200">
@@ -1083,7 +1070,7 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
                     <p>{formErrors.submit}</p>
                   </div>
                 )}
-                
+
                 {/* Submit button */}
                 <button
                   type="submit"
@@ -1099,7 +1086,7 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
                     <>Book Service Now</>
                   )}
                 </button>
-                
+
                 <p className="text-center text-gray-500 text-xs">
                   By submitting this form, you agree to our <a href="#" className="text-green-600 hover:underline">Terms of Service</a> and <a href="#" className="text-green-600 hover:underline">Privacy Policy</a>.
                 </p>
@@ -1108,23 +1095,23 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
           )}
         </div>
       </div>
-      
+
       {/* Location Picker Modal */}
       {showLocationModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 backdrop-blur-sm">
           <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col border border-gray-200 shadow-2xl">
             <div className="p-4 border-b border-gray-200 flex justify-between items-center bg-gradient-to-r from-green-500 to-green-600">
               <h3 className="text-white text-lg font-semibold">Choose Your Exact Location</h3>
-              <button 
-                onClick={() => setShowLocationModal(false)} 
+              <button
+                onClick={() => setShowLocationModal(false)}
                 className="text-white/90 hover:text-white bg-white/10 rounded-lg p-2 hover:bg-white/20 transition-all"
               >
                 <X size={20} />
               </button>
             </div>
             <div className="flex-1 overflow-y-auto">
-              <LocationPicker 
-                onSelectLocation={handleLocationSelect} 
+              <LocationPicker
+                onSelectLocation={handleLocationSelect}
                 initialLocation={coordinates.lat && coordinates.lng ? coordinates : null}
               />
             </div>
