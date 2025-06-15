@@ -365,7 +365,7 @@ const ServiceBooking = ({ isStandalone = false, onBack }) => {
     if (!formData.service) errors.service = 'Please select a service';
     if (!formData.date) errors.date = 'Date is required';
     if (!formData.time) errors.time = 'Time slot is required';
-    if (!formData.location) errors.location = 'Location is required';
+   // if (!formData.location) errors.location = 'Location is required';
     
     // Validate address fields
     if (!formData.address.street) errors['address.street'] = 'Street/House No. is required';
