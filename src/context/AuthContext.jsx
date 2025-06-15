@@ -7,10 +7,10 @@ export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [authError, setAuthError] = useState(null);
-  
+
   // Making sure we get the API URL from environment variables
   const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-  
+
   // Set up axios interceptors for authentication
   useEffect(() => {
     // Request interceptor to add token to all requests
@@ -54,20 +54,20 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       const token = localStorage.getItem('token');
-      
+
       if (!token) {
         setLoading(false);
         return;
       }
-      
+
       try {
         // Try to check server health first
         try {
-          await axios.get(`${API_BASE_URL}/health`, { timeout: 2000 });
+          await axios.get(`${API_BASE_URL}/api/health`, { timeout: 2000 });
         } catch (healthError) {
           console.warn('Server health check failed, may affect authentication', healthError);
         }
-        
+
         // Verify token with backend
         const response = await axios.get(`${API_BASE_URL}/auth/me`, {
           headers: {
@@ -75,7 +75,7 @@ export const AuthProvider = ({ children }) => {
           },
           timeout: 5000 // Add a timeout to prevent hanging
         });
-        
+
         if (response.data && response.data.user) {
           setCurrentUser({
             ...response.data.user,
@@ -88,7 +88,7 @@ export const AuthProvider = ({ children }) => {
         }
       } catch (error) {
         console.error('Auth verification failed:', error);
-        
+
         if (error.code === 'ERR_NETWORK' || error.code === 'ECONNABORTED') {
           console.error('Server is not responding. Either it\'s down or there\'s a network issue.');
           setAuthError('Server connection error. Please try again later.');
@@ -97,14 +97,14 @@ export const AuthProvider = ({ children }) => {
         } else if (error.request) {
           console.error('No response received. Request:', error.request);
         }
-        
+
         // Clear token for security
         localStorage.removeItem('token');
       } finally {
         setLoading(false);
       }
     };
-    
+
     checkAuth();
   }, [API_BASE_URL]);
 
