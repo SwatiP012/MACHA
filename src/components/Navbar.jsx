@@ -61,7 +61,7 @@ const Navbar = ({ scrolled, darkMode, toggleDarkMode }) => {
 
   const handleBookNow = (e) => {
     e.preventDefault();
-    
+
     if (!currentUser) {
       alert('Please log in to book a service.');
       navigate('/login');
@@ -77,7 +77,7 @@ const Navbar = ({ scrolled, darkMode, toggleDarkMode }) => {
   const navLinks = [
     { name: 'Home', path: 'hero', type: 'scroll' },
     { name: 'About', path: 'about', type: 'scroll' },
-    { name: 'Services', path: 'services', type: 'scroll' },    
+    { name: 'Services', path: 'services', type: 'scroll' },
     { name: 'Gallery', path: 'gallery', type: 'scroll' },
     { name: 'Contact', path: 'contact', type: 'scroll' },
   ];
@@ -104,8 +104,8 @@ const Navbar = ({ scrolled, darkMode, toggleDarkMode }) => {
                 MACHA
               </span>
               <span className={`text-xs ${isScrolled
-                  ? 'bg-gradient-to-r from-green-950 via-green-900 to-emerald-800 text-transparent bg-clip-text font-bold'
-                  : 'text-emerald-200 drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)] [text-shadow:0_0_8px_rgba(20,83,45,0.7)]'
+                ? 'bg-gradient-to-r from-green-950 via-green-900 to-emerald-800 text-transparent bg-clip-text font-bold'
+                : 'text-emerald-200 drop-shadow-[0_1px_3px_rgba(0,0,0,0.7)] [text-shadow:0_0_8px_rgba(20,83,45,0.7)]'
                 } tracking-widest uppercase`}>
                 Everything at your doorstep
               </span>
@@ -125,8 +125,8 @@ const Navbar = ({ scrolled, darkMode, toggleDarkMode }) => {
                     offset={-80}
                     duration={800}
                     className={`px-5 py-3 rounded-md text-lg font-bold transition-colors cursor-pointer ${isScrolled
-                        ? 'text-gray-700 hover:text-green-600'
-                        : 'text-white hover:text-green-200'
+                      ? 'text-gray-700 hover:text-green-600'
+                      : 'text-white hover:text-green-200'
                       }`}
                     activeClass="text-green-600"
                   >
@@ -137,10 +137,10 @@ const Navbar = ({ scrolled, darkMode, toggleDarkMode }) => {
                     key={link.name}
                     to={link.path}
                     className={`px-5 py-3 rounded-md text-lg font-bold transition-colors ${location.pathname === link.path
-                        ? 'text-green-600'
-                        : isScrolled
-                          ? 'text-gray-700 hover:text-green-600'
-                          : 'text-white hover:text-green-200'
+                      ? 'text-green-600'
+                      : isScrolled
+                        ? 'text-gray-700 hover:text-green-600'
+                        : 'text-white hover:text-green-200'
                       }`}
                   >
                     {link.name}
@@ -191,8 +191,8 @@ const Navbar = ({ scrolled, darkMode, toggleDarkMode }) => {
               <button
                 onClick={toggleProfileDropdown}
                 className={`flex items-center justify-center w-12 h-12 rounded-full border-2 ${isScrolled
-                    ? 'bg-green-100 text-green-700 border-green-300 hover:bg-green-200'
-                    : 'bg-white/20 text-white border-white/30 hover:bg-white/30'
+                  ? 'bg-green-100 text-green-700 border-green-300 hover:bg-green-200'
+                  : 'bg-white/20 text-white border-white/30 hover:bg-white/30'
                   } transition-all`}
                 aria-expanded={isProfileOpen ? "true" : "false"}
               >
@@ -222,7 +222,7 @@ const Navbar = ({ scrolled, darkMode, toggleDarkMode }) => {
                               <p className="text-xs text-green-600 font-medium mt-1">Administrator</p>
                             )}
                           </div>
-                          
+
                           {/* Show different options based on role */}
                           {currentUser.role === 'admin' ? (
                             <RouterLink
@@ -261,7 +261,7 @@ const Navbar = ({ scrolled, darkMode, toggleDarkMode }) => {
                               </RouterLink>
                             </>
                           )}
-                          
+
                           <button
                             className="w-full text-left px-4 py-3 text-base text-gray-700 hover:bg-gray-100"
                             onClick={handleLogout}
@@ -300,12 +300,12 @@ const Navbar = ({ scrolled, darkMode, toggleDarkMode }) => {
           {/* Mobile menu buttons */}
           <div className="flex md:hidden items-center">
             {/* Theme Toggle for Mobile */}
-            <button
+            {/* <button
               onClick={toggleDarkMode}
               aria-label={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
               className={`p-2 rounded-full ${isScrolled
-                  ? 'bg-gray-100 text-gray-700'
-                  : 'bg-white/20 text-white'
+                ? 'bg-gray-100 text-gray-700'
+                : 'bg-white/20 text-white'
                 } transition-colors mr-2`}
             >
               {darkMode ? (
@@ -313,15 +313,15 @@ const Navbar = ({ scrolled, darkMode, toggleDarkMode }) => {
               ) : (
                 <Moon size={18} />
               )}
-            </button>
+            </button> */}
 
             {/* Profile Icon for Mobile */}
             <div className="relative mr-3" ref={dropdownRef}>
               <button
                 onClick={toggleProfileDropdown}
                 className={`flex items-center justify-center w-11 h-11 rounded-full border-2 ${isScrolled
-                    ? 'bg-green-100 text-green-700 border-green-300'
-                    : 'bg-white/20 text-white border-white/30'
+                  ? 'bg-green-100 text-green-700 border-green-300'
+                  : 'bg-white/20 text-white border-white/30'
                   }`}
                 aria-expanded={isProfileOpen ? "true" : "false"}
               >
@@ -454,8 +454,8 @@ const Navbar = ({ scrolled, darkMode, toggleDarkMode }) => {
                     key={link.name}
                     to={link.path}
                     className={`block px-3 py-3 rounded-md text-lg font-bold ${location.pathname === link.path
-                        ? 'bg-green-100 text-green-700'
-                        : 'text-gray-700 hover:bg-green-50 hover:text-green-700'
+                      ? 'bg-green-100 text-green-700'
+                      : 'text-gray-700 hover:bg-green-50 hover:text-green-700'
                       }`}
                     onClick={() => setIsMenuOpen(false)}
                   >
