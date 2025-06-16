@@ -249,7 +249,7 @@ const Hero = ({ darkMode }) => {
       <div className="container-custom relative z-10 py-20">
         <div className="flex flex-col lg:flex-row items-center">
           <div className="lg:w-1/2 lg:pr-8">
-            <AnimatePresence mode="sync">
+            <AnimatePresence mode="wait">
               <motion.div
                 key={heroSlides[slide].key}
                 initial={{ opacity: 0, y: 30 }}
@@ -347,7 +347,7 @@ const Hero = ({ darkMode }) => {
           >
             <div className="bg-white/10 backdrop-filter backdrop-blur-lg p-8 rounded-3xl border border-white/20 shadow-2xl hover:shadow-green-600/10 transition-all duration-500 transform hover:scale-[1.02]">
               <div className="flex flex-col gap-6">
-                <AnimatePresence mode="sync">
+                <AnimatePresence mode="wait">
                   {heroSlides[slide].features.map((feature, idx) => (
                     <motion.div
                       key={feature.title}
