@@ -1058,3 +1058,4 @@ const ServiceFilter = () => {
 };
 
 export default ServiceFilter;
+export { services, serviceDetails };
