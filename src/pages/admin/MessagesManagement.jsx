@@ -11,7 +11,7 @@ const MessagesManagement = () => {
   const [error, setError] = useState(null);
   const [chatUsers, setChatUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  
+
   const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
   useEffect(() => {
@@ -28,11 +28,11 @@ const MessagesManagement = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      
+
       const response = await axios.get(`${API_BASE_URL}/admin/messages/chats`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      
+
       setChatUsers(response.data.chats);
       if (response.data.chats.length > 0) {
         setActiveChat(response.data.chats[0].userId);
@@ -49,11 +49,11 @@ const MessagesManagement = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      
+
       const response = await axios.get(`${API_BASE_URL}/admin/messages/${userId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      
+
       setMessages(response.data.messages);
     } catch (err) {
       console.error('Error fetching messages:', err);
@@ -65,19 +65,19 @@ const MessagesManagement = () => {
 
   const sendMessage = async (e) => {
     e.preventDefault();
-    
+
     if (!newMessage.trim() || !activeChat) return;
-    
+
     try {
       const token = localStorage.getItem('token');
-      
+
       await axios.post(`${API_BASE_URL}/admin/messages`, {
         text: newMessage,
         recipientId: activeChat
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      
+
       // Optimistically update UI
       const now = new Date();
       setMessages([...messages, {
@@ -86,7 +86,7 @@ const MessagesManagement = () => {
         sender: 'admin',
         createdAt: now.toISOString()
       }]);
-      
+
       setNewMessage('');
     } catch (err) {
       console.error('Error sending message:', err);
@@ -104,7 +104,7 @@ const MessagesManagement = () => {
     return date.toLocaleDateString();
   };
 
-  const filteredChatUsers = chatUsers.filter(user => 
+  const filteredChatUsers = chatUsers.filter(user =>
     user.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -112,7 +112,7 @@ const MessagesManagement = () => {
     <div className="h-[calc(100vh-170px)]">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-gray-800">Messages</h2>
-        <button 
+        <button
           onClick={() => fetchChatUsers()}
           className="p-2 bg-white rounded-lg border hover:bg-gray-50"
           title="Refresh"
@@ -120,7 +120,7 @@ const MessagesManagement = () => {
           <RefreshCw size={20} />
         </button>
       </div>
-      
+
       <div className="grid grid-cols-12 gap-6 h-full">
         {/* Users List */}
         <div className="col-span-12 md:col-span-4 lg:col-span-3 bg-white rounded-lg shadow h-full overflow-hidden flex flex-col">
@@ -141,7 +141,7 @@ const MessagesManagement = () => {
               </span>
             </div>
           </div>
-          
+
           <div className="flex-1 overflow-y-auto p-2">
             {loading && chatUsers.length === 0 ? (
               <div className="flex justify-center items-center h-32">
@@ -154,18 +154,16 @@ const MessagesManagement = () => {
               </div>
             ) : filteredChatUsers.length > 0 ? (
               filteredChatUsers.map(user => (
-                <div 
+                <div
                   key={user.userId}
                   onClick={() => setActiveChat(user.userId)}
-                  className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer ${
-                    activeChat === user.userId 
-                      ? 'bg-green-50 border border-green-200' 
+                  className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer ${activeChat === user.userId
+                      ? 'bg-green-50 border border-green-200'
                       : 'hover:bg-gray-50'
-                  }`}
+                    }`}
                 >
-                  <div className={`w-10 h-10 rounded-full ${
-                    user.unread > 0 ? 'bg-green-500' : 'bg-gray-200'
-                  } flex items-center justify-center text-white font-medium`}>
+                  <div className={`w-10 h-10 rounded-full ${user.unread > 0 ? 'bg-green-500' : 'bg-gray-200'
+                    } flex items-center justify-center text-white font-medium`}>
                     {user.name.charAt(0).toUpperCase()}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -189,7 +187,7 @@ const MessagesManagement = () => {
             )}
           </div>
         </div>
-        
+
         {/* Chat Window */}
         <div className="col-span-12 md:col-span-8 lg:col-span-9 bg-white rounded-lg shadow h-full flex flex-col overflow-hidden">
           {activeChat ? (
@@ -208,7 +206,7 @@ const MessagesManagement = () => {
                   </p>
                 </div>
               </div>
-              
+
               {/* Messages */}
               <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
                 {loading && messages.length === 0 ? (
@@ -217,21 +215,19 @@ const MessagesManagement = () => {
                   </div>
                 ) : messages.length > 0 ? (
                   messages.map(msg => (
-                    <div 
+                    <div
                       key={msg._id}
                       className={`flex ${msg.sender === 'admin' ? 'justify-end' : 'justify-start'}`}
                     >
-                      <div 
-                        className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                          msg.sender === 'admin'
+                      <div
+                        className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${msg.sender === 'admin'
                             ? 'bg-green-500 text-white rounded-br-none'
                             : 'bg-white border rounded-bl-none'
-                        }`}
+                          }`}
                       >
                         <p>{msg.text}</p>
-                        <p className={`text-xs mt-1 text-right ${
-                          msg.sender === 'admin' ? 'text-green-100' : 'text-gray-400'
-                        }`}>
+                        <p className={`text-xs mt-1 text-right ${msg.sender === 'admin' ? 'text-green-100' : 'text-gray-400'
+                          }`}>
                           {formatTime(msg.createdAt)}
                         </p>
                       </div>
@@ -245,7 +241,7 @@ const MessagesManagement = () => {
                   </div>
                 )}
               </div>
-              
+
               {/* Message Input */}
               <form onSubmit={sendMessage} className="p-4 border-t flex gap-2">
                 <input
@@ -255,7 +251,7 @@ const MessagesManagement = () => {
                   placeholder="Type your message..."
                   className="flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                 />
-                <button 
+                <button
                   type="submit"
                   disabled={!newMessage.trim()}
                   className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 flex items-center gap-2"

@@ -40,7 +40,7 @@ const serviceSchema = new Schema({
 });
 
 // Update the 'updatedAt' field on save
-serviceSchema.pre('save', function(next) {
+serviceSchema.pre('save', function (next) {
   this.updatedAt = Date.now();
   next();
 });

@@ -55,11 +55,11 @@ export const requestNotificationPermission = () => {
     console.log('This browser does not support desktop notifications');
     return false;
   }
-  
+
   if (Notification.permission === 'granted') {
     return true;
   }
-  
+
   if (Notification.permission !== 'denied') {
     Notification.requestPermission().then(permission => {
       if (permission === 'granted') {
@@ -68,7 +68,7 @@ export const requestNotificationPermission = () => {
       }
     });
   }
-  
+
   return false;
 };
 
@@ -79,19 +79,19 @@ export const showBrowserNotification = (title, options = {}) => {
       icon: '/favicon.ico', // Replace with your favicon path
       ...options
     });
-    
+
     // Handle notification click
-    notification.onclick = function() {
+    notification.onclick = function () {
       window.focus();
       if (options.url) {
         window.location.href = options.url;
       }
       this.close();
     };
-    
+
     return notification;
   }
-  
+
   return null;
 };
 

@@ -6,21 +6,21 @@ const authenticate = async (req, res, next) => {
   try {
     // Get token from the Authorization header
     const token = req.headers.authorization?.split(' ')[1];
-    
+
     if (!token) {
       return res.status(401).json({ message: 'Authentication required' });
     }
-    
+
     // Verify the token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    
+
     // Find the user
     const user = await User.findById(decoded.id).select('-password');
-    
+
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-    
+
     // Add the user to the request object
     req.user = user;
     next();

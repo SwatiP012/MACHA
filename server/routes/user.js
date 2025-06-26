@@ -10,7 +10,7 @@ router.get('/profile', auth, async (req, res) => {
     if (!user) {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
-    
+
     res.json({ success: true, user });
   } catch (error) {
     console.error('Error fetching user profile:', error);
@@ -22,21 +22,21 @@ router.get('/profile', auth, async (req, res) => {
 router.put('/profile', auth, async (req, res) => {
   try {
     const { name, email, phoneNumber, address } = req.body;
-    
+
     // Find user
     const user = await User.findById(req.user._id);
     if (!user) {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
-    
+
     // Update fields if provided
     if (name) user.name = name;
     if (email) user.email = email.toLowerCase();
     if (phoneNumber) user.phoneNumber = phoneNumber;
     if (address) user.address = address;
-    
+
     await user.save();
-    
+
     res.json({
       success: true,
       message: 'Profile updated successfully',

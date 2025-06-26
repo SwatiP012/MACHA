@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import AppLayout from './components/AppLayout';
 import ProtectedRoute from './components/ProtectedRoute';
+import { FoodDeliveryProvider } from './context/FoodDeliveryContext'; // <-- Import provider
 
 // Pages
 import App from './App';
@@ -11,6 +12,7 @@ import AuthPage from './pages/AuthPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ProfilePage from './pages/ProfilePage';
 import BookingPage from './pages/BookingPage';
+import RestaurantMenu from './pages/food-delivery/RestaurantMenu';
 
 // Admin imports
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -19,6 +21,7 @@ import OrdersManagement from './pages/admin/OrdersManagement';
 import MessagesManagement from './pages/admin/MessagesManagement';
 import UsersManagement from './pages/admin/UsersManagement';
 import Analytics from './pages/admin/AdminAnalytics';
+import RestaurantHome from './pages/restaurant/RestaurantHome';
 
 // Lazy-loaded pages
 const TermsPage = lazy(() => import('./pages/TermsPage'));
@@ -38,19 +41,27 @@ const LoadingFallback = () => (
 export function createAppRouter() {
   return createBrowserRouter([
     // Auth Routes
-    { 
-      path: '/login', 
+    {
+      path: '/login',
       element: <AuthPage mode="login" />
     },
-    { 
-      path: '/signup', 
+    {
+      path: '/signup',
       element: <AuthPage mode="signup" />
     },
-    { 
-      path: '/forgot-password', 
+    {
+      path: '/forgot-password',
       element: <ForgotPasswordPage />
     },
-    
+    {
+      path: '/restaurant/home',
+      element: (
+        <ProtectedRoute>
+          <RestaurantHome />
+        </ProtectedRoute>
+      )
+    },
+
     // App Routes with Layout
     {
       path: '/',
@@ -73,6 +84,16 @@ export function createAppRouter() {
             <FoodDelivery />
           </Suspense>
         </AppLayout>
+      )
+    },
+    {
+      path: '/food-delivery/restaurant/:restaurantId',
+      element: (
+        <FoodDeliveryProvider>
+          <AppLayout>
+            <RestaurantMenu />
+          </AppLayout>
+        </FoodDeliveryProvider>
       )
     },
     {

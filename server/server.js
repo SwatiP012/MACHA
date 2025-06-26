@@ -5,8 +5,15 @@ const cors = require('cors');
 const path = require('path');
 const http = require('http');
 const fs = require('fs');
+const WebSocket = require('ws');
+const jwt = require('jsonwebtoken');
+const url = require('url');
 const { initializeWebSocketServer } = require('./websocket/index'); // adjust path if needed
 
+
+require('./models');
+
+const app = express();
 // Function to safely import routes (with error handling)
 function safeRequire(path, fallback = null) {
   try {
@@ -82,15 +89,23 @@ function startServer() {
   const serviceRoutes = safeRequire('./routes/serviceRoutes', express.Router());
   const adminRoutes = safeRequire('./routes/adminRoutes', express.Router());
   const healthRoutes = safeRequire('./routes/health', express.Router());
+  const restaurantRoutes = require('./routes/restaurantRoutes');
+  const foodDeliveryRoutes = require('./routes/foodDeliveryRoutes');
+  const analyticsRoutes = require('./routes/analyticsRoutes');
+  const groceryRoutes = require('./routes/groceryRoutes');
 
   // Mount routes with error handling
+  app.use('/api/bookings', bookingRoutes);
   app.use('/api/auth', authRoutes);
   app.use('/api/users', userRoutes);
-  app.use('/api/bookings', bookingRoutes);
-  app.use('/api/services', serviceRoutes);
+  app.use('/api/restaurants', restaurantRoutes);
+  app.use('/api/food-delivery', foodDeliveryRoutes);
   app.use('/api/admin', adminRoutes);
-  app.use('/api', healthRoutes);
-  app.use('/api/analytics', require('./routes/analyticsRoutes'));
+  app.use('/api/analytics', analyticsRoutes);
+  app.use('/api/grocery', groceryRoutes); 
+  app.use('/api/services', serviceRoutes);
+  app.use('/api/health', healthRoutes);
+
 
   // Root endpoint for API check
   app.get('/api', (req, res) => {

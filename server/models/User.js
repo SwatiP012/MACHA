@@ -4,63 +4,71 @@ const bcrypt = require('bcryptjs');
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
     trim: true
   },
   email: {
     type: String,
-    required: true,
+    required: [true, 'Email is required'],
     unique: true,
+    lowercase: true,
     trim: true,
-    lowercase: true
+    match: [/^\S+@\S+\.\S+$/, 'Please provide a valid email address']
   },
   password: {
     type: String,
-    required: function() {
-      return !this.googleId; // Password not required if using Google auth
-    },
-    minlength: 6
-  },
-  phoneNumber: {
-    type: String,
-    required: function() {
-      return !this.googleId; // Phone not required if using Google auth
-    },
-    trim: true
+    required: [true, 'Password is required'],
+    minlength: [6, 'Password must be at least 6 characters long'],
+    select: false
   },
   role: {
     type: String,
     enum: ['user', 'admin'],
     default: 'user'
   },
-  address: {
-    type: String,
-    default: ''
-  },
-  googleId: {
-    type: String
-  },
-  profileImage: {
-    type: String
-  },
-  emailVerified: {
+  phoneNumber: String,
+  profilePicture: String,
+  googleId: String,
+  verified: {
     type: Boolean,
     default: false
   },
+  addresses: [
+    {
+      fullName: String,
+      phoneNumber: String,
+      street: String,
+      area: String,
+      landmark: String,
+      city: String,
+      state: String,
+      pincode: String,
+      type: {
+        type: String,
+        enum: ['home', 'work', 'other'],
+        default: 'home'
+      },
+      isDefault: {
+        type: Boolean,
+        default: false
+      }
+    }
+  ],
+  favorites: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Restaurant'
+    }
+  ],
   createdAt: {
     type: Date,
     default: Date.now
-  },
-  lastLogin: {
-    type: Date,
-    default: Date.now
   }
-});
+}, { timestamps: true });
 
-// Hash password before saving
-userSchema.pre('save', async function(next) {
-  if (!this.isModified('password') || !this.password) return next();
-  
+// Password hashing middleware
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next();
+
   try {
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
@@ -70,10 +78,9 @@ userSchema.pre('save', async function(next) {
   }
 });
 
-// Method to compare password
-userSchema.methods.comparePassword = async function(password) {
-  if (!this.password) return false;
-  return bcrypt.compare(password, this.password);
+// Method to compare password for login
+userSchema.methods.matchPassword = async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
 };
 
 module.exports = mongoose.model('User', userSchema);

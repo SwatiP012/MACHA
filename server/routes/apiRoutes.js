@@ -18,13 +18,13 @@ router.get('/health', (req, res) => {
 router.get('/chat/status', (req, res) => {
   // Check how many support agents are online using the WebSocket service
   // Check if any admins are in the chat room
-  const supportStaffOnline = rooms.has('chat') && 
+  const supportStaffOnline = rooms.has('chat') &&
     Array.from(rooms.get('chat')).some(client => {
       const clientInfo = clients.get(client);
-      return clientInfo && clientInfo.user && 
+      return clientInfo && clientInfo.user &&
         (clientInfo.user.role === 'admin' || clientInfo.user.role === 'support');
     });
-  
+
   res.json({
     status: supportStaffOnline ? 'online' : 'offline',
     responseTime: 'typically < 5 minutes',

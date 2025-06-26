@@ -35,10 +35,12 @@ const HomePage = ({ darkMode }) => {
   return (
     <>
       <Hero darkMode={darkMode} />
-      <About darkMode={darkMode} />
+      
       <ServiceFilter darkMode={darkMode} />
+      
       <Gallery darkMode={false} /> {/* Force light theme for Gallery */}
       <ServiceAreaMap />
+      <About darkMode={darkMode} />
       <Contact darkMode={darkMode} />
     </>
   );

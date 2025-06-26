@@ -33,10 +33,10 @@ const Footer = () => {
               <a href="https://www.facebook.com/machaservices" target="_blank" rel="noopener noreferrer" className="p-2 bg-white hover:bg-[#eaf7ef] rounded-full shadow-sm">
                 <Facebook size={16} className="text-[#17612A]" />
               </a>
-              <a href="https://twitter.com/machaservices" target="_blank" rel="noopener noreferrer" className="p-2 bg-white hover:bg-[#eaf7ef] rounded-full shadow-sm">
+              <a href="https://x.com/macha_services" target="_blank" rel="noopener noreferrer" className="p-2 bg-white hover:bg-[#eaf7ef] rounded-full shadow-sm">
                 <Twitter size={16} className="text-[#17612A]" />
               </a>
-              <a href="https://www.instagram.com/machaservices/" target="_blank" rel="noopener noreferrer" className="p-2 bg-white hover:bg-[#eaf7ef] rounded-full shadow-sm">
+              <a href="https://www.instagram.com/macha_mana_choutuppal?igsh=MXF0eDg4cGJhdzY5Zg==/" target="_blank" rel="noopener noreferrer" className="p-2 bg-white hover:bg-[#eaf7ef] rounded-full shadow-sm">
                 <Instagram size={16} className="text-[#17612A]" />
               </a>
             </div>

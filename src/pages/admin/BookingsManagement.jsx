@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Search, Calendar, Package, User, MapPin, AlertCircle, Check, X, 
-  Trash2, RefreshCw, Save, Filter, ChevronDown, ChevronRight, Eye, 
+import {
+  Search, Calendar, Package, User, MapPin, AlertCircle, Check, X,
+  Trash2, RefreshCw, Save, Filter, ChevronDown, ChevronRight, Eye,
   Download, ChevronLeft, Mail, Phone, MoreHorizontal, Map,
   ExternalLink, Clock, ChevronUp, Info, MessageSquare
 } from 'lucide-react';
@@ -29,7 +29,7 @@ const BookingsManagement = () => {
   const [assigneeInput, setAssigneeInput] = useState('');
   const [notes, setNotes] = useState('');
   const [infoExpanded, setInfoExpanded] = useState(true);
-  
+
   const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
   // Helper function for booking status colors
@@ -57,13 +57,13 @@ const BookingsManagement = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      
+
       if (!token) {
         setError('Authentication required. Please login again.');
         setLoading(false);
         return;
       }
-      
+
       // Prepare query params
       const params = new URLSearchParams();
       params.append('page', currentPage);
@@ -74,11 +74,11 @@ const BookingsManagement = () => {
       if (searchTerm) {
         params.append('search', searchTerm);
       }
-      
+
       const response = await axios.get(`${API_BASE_URL}/admin/bookings?${params.toString()}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      
+
       if (response.data && response.data.success) {
         setBookings(response.data.bookings);
         setTotalPages(response.data.pagination.pages);
@@ -131,34 +131,34 @@ const BookingsManagement = () => {
     try {
       setStatusUpdateLoading(true);
       const token = localStorage.getItem('token');
-      
+
       // Find the current booking data
       const bookingToUpdate = bookings.find(booking => booking._id === bookingId);
-      
+
       if (!bookingToUpdate) {
         throw new Error('Booking not found');
       }
-      
+
       const response = await axios.patch(
         `${API_BASE_URL}/admin/bookings/${bookingId}/status`,
-        { 
+        {
           status: newStatus,
           // Include the location object to satisfy validation requirements
           location: bookingToUpdate.location
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      
+
       if (response.data && response.data.success) {
         // Update booking in state
-        setBookings(prev => prev.map(booking => 
+        setBookings(prev => prev.map(booking =>
           booking._id === bookingId ? { ...booking, status: newStatus } : booking
         ));
-        
+
         if (selectedBooking && selectedBooking._id === bookingId) {
           setSelectedBooking({ ...selectedBooking, status: newStatus });
         }
-        
+
         setActionSuccess(`Booking status updated to ${newStatus}`);
         setTimeout(() => setActionSuccess(''), 3000);
       }
@@ -174,14 +174,14 @@ const BookingsManagement = () => {
   // Fixed: View booking details function to properly set state variables
   const viewBookingDetails = (booking) => {
     console.log("Opening booking details:", booking._id); // Debug logging
-    
+
     // Set the booking data to the state
     setSelectedBooking(booking);
-    
+
     // Set notes and assignee from the booking data for editing
     setNotes(booking.notes || '');
     setAssigneeInput(booking.assignedTo || '');
-    
+
     // Show the modal by setting state to true
     setShowDetailModal(true);
   };
@@ -190,23 +190,23 @@ const BookingsManagement = () => {
     try {
       setStatusUpdateLoading(true);
       const token = localStorage.getItem('token');
-      
+
       const response = await axios.patch(
         `${API_BASE_URL}/admin/bookings/${selectedBooking._id}/assign`,
         { assignedTo: assigneeInput },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      
+
       if (response.data && response.data.success) {
         // Update booking in state
-        setBookings(prev => prev.map(booking => 
-          booking._id === selectedBooking._id 
-            ? { ...booking, assignedTo: assigneeInput } 
+        setBookings(prev => prev.map(booking =>
+          booking._id === selectedBooking._id
+            ? { ...booking, assignedTo: assigneeInput }
             : booking
         ));
-        
+
         setSelectedBooking({ ...selectedBooking, assignedTo: assigneeInput });
-        
+
         setActionSuccess('Booking assigned successfully');
         setTimeout(() => setActionSuccess(''), 3000);
       }
@@ -223,23 +223,23 @@ const BookingsManagement = () => {
     try {
       setStatusUpdateLoading(true);
       const token = localStorage.getItem('token');
-      
+
       const response = await axios.patch(
         `${API_BASE_URL}/admin/bookings/${selectedBooking._id}/notes`,
         { notes },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      
+
       if (response.data && response.data.success) {
         // Update booking in state
-        setBookings(prev => prev.map(booking => 
-          booking._id === selectedBooking._id 
-            ? { ...booking, notes } 
+        setBookings(prev => prev.map(booking =>
+          booking._id === selectedBooking._id
+            ? { ...booking, notes }
             : booking
         ));
-        
+
         setSelectedBooking({ ...selectedBooking, notes });
-        
+
         setActionSuccess('Notes updated successfully');
         setTimeout(() => setActionSuccess(''), 3000);
       }
@@ -265,12 +265,12 @@ const BookingsManagement = () => {
       booking.phone,
       booking.location?.address || 'N/A'
     ]);
-    
+
     const csvContent = [
       headers.join(','),
       ...csvData.map(row => row.join(','))
     ].join('\n');
-    
+
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -287,24 +287,24 @@ const BookingsManagement = () => {
       <Helmet>
         <title>Bookings Management | MACHA Admin</title>
       </Helmet>
-      
+
       {/* Header section with responsive layout */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Bookings Management</h1>
           <p className="text-gray-600">Manage service bookings and appointments</p>
         </div>
-        
+
         <div className="flex gap-2 w-full sm:w-auto">
-          <button 
-            onClick={exportBookings} 
+          <button
+            onClick={exportBookings}
             className="flex items-center gap-2 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 sm:w-auto w-full justify-center"
           >
             <Download size={16} />
             <span className="whitespace-nowrap">Export</span>
           </button>
-          <button 
-            onClick={handleRefresh} 
+          <button
+            onClick={handleRefresh}
             className="p-2 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 text-gray-700 flex-shrink-0"
             title="Refresh"
           >
@@ -320,7 +320,7 @@ const BookingsManagement = () => {
           <span>{actionSuccess}</span>
         </div>
       )}
-      
+
       {/* Error message */}
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded-lg flex items-center gap-2 text-sm">
@@ -328,53 +328,48 @@ const BookingsManagement = () => {
           <span>{error}</span>
         </div>
       )}
-      
+
       {/* Filters & Search - with responsive layout */}
       <div className="flex flex-col lg:flex-row justify-between gap-4">
         {/* Status filter buttons - scrollable on mobile */}
         <div className="flex flex-nowrap overflow-x-auto pb-2 gap-2 hide-scrollbar">
-          <button 
-            onClick={() => setStatusFilter('all')} 
-            className={`px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap flex-shrink-0 ${
-              statusFilter === 'all' ? 'bg-green-600 text-white' : 'bg-white border border-gray-200 text-gray-700'
-            }`}
+          <button
+            onClick={() => setStatusFilter('all')}
+            className={`px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap flex-shrink-0 ${statusFilter === 'all' ? 'bg-green-600 text-white' : 'bg-white border border-gray-200 text-gray-700'
+              }`}
           >
             All Bookings
           </button>
-          <button 
-            onClick={() => setStatusFilter('pending')} 
-            className={`px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap flex-shrink-0 ${
-              statusFilter === 'pending' ? 'bg-amber-600 text-white' : 'bg-white border border-gray-200 text-gray-700'
-            }`}
+          <button
+            onClick={() => setStatusFilter('pending')}
+            className={`px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap flex-shrink-0 ${statusFilter === 'pending' ? 'bg-amber-600 text-white' : 'bg-white border border-gray-200 text-gray-700'
+              }`}
           >
             Pending
           </button>
-          <button 
-            onClick={() => setStatusFilter('confirmed')} 
-            className={`px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap flex-shrink-0 ${
-              statusFilter === 'confirmed' ? 'bg-blue-600 text-white' : 'bg-white border border-gray-200 text-gray-700'
-            }`}
+          <button
+            onClick={() => setStatusFilter('confirmed')}
+            className={`px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap flex-shrink-0 ${statusFilter === 'confirmed' ? 'bg-blue-600 text-white' : 'bg-white border border-gray-200 text-gray-700'
+              }`}
           >
             Confirmed
           </button>
-          <button 
-            onClick={() => setStatusFilter('completed')} 
-            className={`px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap flex-shrink-0 ${
-              statusFilter === 'completed' ? 'bg-green-600 text-white' : 'bg-white border border-gray-200 text-gray-700'
-            }`}
+          <button
+            onClick={() => setStatusFilter('completed')}
+            className={`px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap flex-shrink-0 ${statusFilter === 'completed' ? 'bg-green-600 text-white' : 'bg-white border border-gray-200 text-gray-700'
+              }`}
           >
             Completed
           </button>
-          <button 
-            onClick={() => setStatusFilter('cancelled')} 
-            className={`px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap flex-shrink-0 ${
-              statusFilter === 'cancelled' ? 'bg-red-600 text-white' : 'bg-white border border-gray-200 text-gray-700'
-            }`}
+          <button
+            onClick={() => setStatusFilter('cancelled')}
+            className={`px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap flex-shrink-0 ${statusFilter === 'cancelled' ? 'bg-red-600 text-white' : 'bg-white border border-gray-200 text-gray-700'
+              }`}
           >
             Cancelled
           </button>
         </div>
-        
+
         {/* Search form - full width on mobile */}
         <form onSubmit={handleSearch} className="flex items-center w-full lg:w-auto">
           <div className="relative flex-1">
@@ -387,7 +382,7 @@ const BookingsManagement = () => {
               className="pl-9 pr-3 py-2 border rounded-l-lg w-full focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
-          <button 
+          <button
             type="submit"
             className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-r-lg whitespace-nowrap"
           >
@@ -395,7 +390,7 @@ const BookingsManagement = () => {
           </button>
         </form>
       </div>
-      
+
       {/* Selected actions */}
       {selectedBookings.length > 0 && (
         <div className="bg-gray-50 p-4 rounded-lg flex flex-col sm:flex-row justify-between items-center gap-3">
@@ -403,19 +398,19 @@ const BookingsManagement = () => {
             {selectedBookings.length} bookings selected
           </span>
           <div className="flex flex-wrap gap-2 w-full sm:w-auto justify-end">
-            <button 
+            <button
               className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm flex items-center gap-1"
             >
               <Check size={14} />
               <span>Confirm</span>
             </button>
-            <button 
+            <button
               className="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm flex items-center gap-1"
             >
               <Check size={14} />
               <span>Complete</span>
             </button>
-            <button 
+            <button
               className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm flex items-center gap-1"
             >
               <X size={14} />
@@ -424,7 +419,7 @@ const BookingsManagement = () => {
           </div>
         </div>
       )}
-      
+
       {/* Booking table with horizontal scroll for mobile */}
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <div className="overflow-x-auto">
@@ -433,8 +428,8 @@ const BookingsManagement = () => {
               <tr>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   <div className="flex items-center">
-                    <input 
-                      type="checkbox" 
+                    <input
+                      type="checkbox"
                       checked={selectedBookings.length > 0 && selectedBookings.length === bookings.length}
                       onChange={handleSelectAll}
                       className="h-4 w-4 text-green-600 focus:ring-green-500 rounded"
@@ -474,8 +469,8 @@ const BookingsManagement = () => {
                 bookings.map((booking) => (
                   <tr key={booking._id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <input 
-                        type="checkbox" 
+                      <input
+                        type="checkbox"
                         checked={selectedBookings.includes(booking._id)}
                         onChange={() => handleSelectBooking(booking._id)}
                         className="h-4 w-4 text-green-600 focus:ring-green-500 rounded"
@@ -520,36 +515,35 @@ const BookingsManagement = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center space-x-2">
-                        <button 
+                        <button
                           onClick={() => viewBookingDetails(booking)}
-                          className="p-1 rounded hover:bg-blue-50 text-blue-600" 
+                          className="p-1 rounded hover:bg-blue-50 text-blue-600"
                           title="View details"
                           type="button" // Explicitly set button type
                         >
                           <Eye size={18} />
                         </button>
-                        <button 
-                          onClick={() => handleStatusChange(booking._id, 
-                            booking.status === 'pending' ? 'confirmed' : 
-                            booking.status === 'confirmed' ? 'completed' : 
-                            'pending'
+                        <button
+                          onClick={() => handleStatusChange(booking._id,
+                            booking.status === 'pending' ? 'confirmed' :
+                              booking.status === 'confirmed' ? 'completed' :
+                                'pending'
                           )}
-                          className={`p-1 rounded ${
-                            booking.status === 'pending' ? 'hover:bg-blue-50 text-blue-600' :
-                            booking.status === 'confirmed' ? 'hover:bg-green-50 text-green-600' :
-                            'hover:bg-yellow-50 text-yellow-600'
-                          }`}
+                          className={`p-1 rounded ${booking.status === 'pending' ? 'hover:bg-blue-50 text-blue-600' :
+                              booking.status === 'confirmed' ? 'hover:bg-green-50 text-green-600' :
+                                'hover:bg-yellow-50 text-yellow-600'
+                            }`}
                           title={
                             booking.status === 'pending' ? 'Mark as confirmed' :
-                            booking.status === 'confirmed' ? 'Mark as completed' :
-                            'Reset to pending'
+                              booking.status === 'confirmed' ? 'Mark as completed' :
+                                'Reset to pending'
                           }
                         >
                           {booking.status === 'pending' ? <Check size={18} /> :
-                           booking.status === 'confirmed' ? <Check size={18} /> :
-                           <RefreshCw size={18} />}
+                            booking.status === 'confirmed' ? <Check size={18} /> :
+                              <RefreshCw size={18} />}
                         </button>
-                        <button 
+                        <button
                           onClick={() => handleStatusChange(booking._id, 'cancelled')}
                           className="p-1 rounded hover:bg-red-50 text-red-600"
                           title="Cancel booking"
@@ -583,7 +577,7 @@ const BookingsManagement = () => {
           </table>
         </div>
       </div>
-      
+
       {/* Pagination - responsive layout */}
       {totalPages > 1 && (
         <div className="flex justify-center mt-6">
@@ -596,26 +590,25 @@ const BookingsManagement = () => {
               <ChevronLeft size={16} />
               <span className="hidden sm:inline ml-1">Previous</span>
             </button>
-            
+
             {/* Show fewer page numbers on mobile */}
             <div className="flex space-x-2">
               {Array.from({ length: totalPages }).map((_, index) => {
                 // On mobile, only show current page, first, last, and nearby pages
                 const pageNumber = index + 1;
-                const showOnMobile = 
-                  pageNumber === 1 || 
-                  pageNumber === totalPages || 
+                const showOnMobile =
+                  pageNumber === 1 ||
+                  pageNumber === totalPages ||
                   Math.abs(pageNumber - currentPage) <= 1;
-                
+
                 return showOnMobile ? (
                   <button
                     key={index}
                     onClick={() => setCurrentPage(pageNumber)}
-                    className={`w-8 h-8 flex items-center justify-center rounded ${
-                      currentPage === pageNumber
-                        ? 'bg-green-600 text-white' 
+                    className={`w-8 h-8 flex items-center justify-center rounded ${currentPage === pageNumber
+                        ? 'bg-green-600 text-white'
                         : 'bg-white border'
-                    }`}
+                      }`}
                   >
                     {pageNumber}
                   </button>
@@ -627,7 +620,7 @@ const BookingsManagement = () => {
                 );
               })}
             </div>
-            
+
             <button
               onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
               disabled={currentPage === totalPages}
@@ -669,7 +662,7 @@ const BookingsManagement = () => {
                   <div className="text-green-100 mt-1 text-sm flex items-center gap-2">
                     <span>Tracking ID: {selectedBooking.trackingId || 'N/A'}</span>
                     {selectedBooking.trackingId && (
-                      <button 
+                      <button
                         onClick={() => {
                           navigator.clipboard.writeText(selectedBooking.trackingId);
                           // You could show a toast notification here
@@ -682,21 +675,21 @@ const BookingsManagement = () => {
                     )}
                   </div>
                 </div>
-                <button 
+                <button
                   onClick={() => setShowDetailModal(false)}
                   className="p-1 rounded-full hover:bg-white/20 transition-colors"
                 >
                   <X size={20} />
                 </button>
               </div>
-              
+
               {/* Content - scrollable */}
               <div className="overflow-y-auto p-6 flex-1 bg-gray-50">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Customer Information */}
                   <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
                     <h4 className="font-medium text-gray-800 mb-4 flex items-center gap-2 pb-2 border-b border-gray-100">
-                      <User size={18} className="text-green-600" /> 
+                      <User size={18} className="text-green-600" />
                       <span>Customer Information</span>
                     </h4>
                     <div className="space-y-4">
@@ -709,7 +702,7 @@ const BookingsManagement = () => {
                           <p className="text-sm text-gray-500">Email</p>
                           <div className="flex items-center gap-2">
                             <p className="font-medium text-gray-800 truncate">{selectedBooking.email}</p>
-                            <a 
+                            <a
                               href={`mailto:${selectedBooking.email}`}
                               className="text-blue-600 hover:text-blue-800"
                               title="Send email"
@@ -723,7 +716,7 @@ const BookingsManagement = () => {
                         <p className="text-sm text-gray-500">Phone</p>
                         <div className="flex items-center gap-2">
                           <p className="font-medium text-gray-800">{selectedBooking.phone}</p>
-                          <a 
+                          <a
                             href={`tel:${selectedBooking.phone}`}
                             className="text-blue-600 hover:text-blue-800"
                             title="Call customer"
@@ -734,7 +727,7 @@ const BookingsManagement = () => {
                       </div>
                     </div>
                   </div>
-                  
+
                   {/* Booking Details */}
                   <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
                     <h4 className="font-medium text-gray-800 mb-4 flex items-center gap-2 pb-2 border-b border-gray-100">
@@ -776,7 +769,7 @@ const BookingsManagement = () => {
                       </div>
                     </div>
                   </div>
-                  
+
                   {/* Location and Map section */}
                   <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-100 md:col-span-2">
                     <h4 className="font-medium text-gray-800 mb-4 flex items-center gap-2 pb-2 border-b border-gray-100">
@@ -821,7 +814,7 @@ const BookingsManagement = () => {
                             {/* Map placeholder - you could integrate Google Maps here */}
                             <div className="absolute inset-0 bg-[url('https://maps.googleapis.com/maps/api/staticmap?center=17.3112,78.8639&zoom=14&size=600x300&key=YOUR_API_KEY')] bg-cover bg-center opacity-50"></div>
                             <div className="relative z-10">
-                              <a 
+                              <a
                                 href={`https://www.google.com/maps?q=${selectedBooking.location.coordinates.lat},${selectedBooking.location.coordinates.lng}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
@@ -837,12 +830,12 @@ const BookingsManagement = () => {
                     </div>
                   </div>
                 </div>
-                
+
                 {/* Additional Info - collapsible */}
                 {selectedBooking.additionalInfo && (
                   <div className="mt-6 bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-                    <button 
-                      onClick={() => setInfoExpanded(!infoExpanded)} 
+                    <button
+                      onClick={() => setInfoExpanded(!infoExpanded)}
                       className="w-full flex justify-between items-center text-left focus:outline-none"
                     >
                       <h4 className="font-medium text-gray-800 flex items-center gap-2">
@@ -851,7 +844,7 @@ const BookingsManagement = () => {
                       </h4>
                       {infoExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
                     </button>
-                    
+
                     {infoExpanded && (
                       <div className="mt-3 p-3 bg-gray-50 rounded-lg border border-gray-100">
                         <p className="text-gray-700">{selectedBooking.additionalInfo}</p>
@@ -859,7 +852,7 @@ const BookingsManagement = () => {
                     )}
                   </div>
                 )}
-                
+
                 {/* Admin Notes */}
                 <div className="mt-6 bg-white p-5 rounded-xl shadow-sm border border-gray-100">
                   <h4 className="font-medium text-gray-800 mb-4 flex items-center gap-2 pb-2 border-b border-gray-100">
@@ -887,7 +880,7 @@ const BookingsManagement = () => {
                     </button>
                   </div>
                 </div>
-                
+
                 {/* Assignment Section */}
                 <div className="mt-6 bg-white p-5 rounded-xl shadow-sm border border-gray-100">
                   <h4 className="font-medium text-gray-800 mb-4 flex items-center gap-2 pb-2 border-b border-gray-100">
@@ -916,7 +909,7 @@ const BookingsManagement = () => {
                     </button>
                   </div>
                 </div>
-                
+
                 {/* Status Update */}
                 <div className="mt-6 bg-white p-5 rounded-xl shadow-sm border border-gray-100">
                   <h4 className="font-medium text-gray-800 mb-4 flex items-center gap-2 pb-2 border-b border-gray-100">
@@ -932,7 +925,7 @@ const BookingsManagement = () => {
                         className={`px-4 py-2 rounded-lg text-sm font-medium capitalize flex items-center justify-center gap-2
                           ${selectedBooking.status === status
                             ? 'bg-green-50 text-green-700 border border-green-200'
-                            : status === 'pending' 
+                            : status === 'pending'
                               ? 'bg-yellow-50 text-yellow-700 border border-yellow-200 hover:bg-yellow-100'
                               : status === 'confirmed'
                                 ? 'bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100'
@@ -951,7 +944,7 @@ const BookingsManagement = () => {
                   </div>
                 </div>
               </div>
-              
+
               {/* Footer actions */}
               <div className="p-4 bg-gray-50 border-t flex justify-end gap-3">
                 <button
@@ -962,17 +955,17 @@ const BookingsManagement = () => {
                 </button>
                 <button
                   onClick={() => {
-                    handleStatusChange(selectedBooking._id, 
-                      selectedBooking.status === 'pending' ? 'confirmed' : 
-                      selectedBooking.status === 'confirmed' ? 'completed' : 
-                      'pending'
+                    handleStatusChange(selectedBooking._id,
+                      selectedBooking.status === 'pending' ? 'confirmed' :
+                        selectedBooking.status === 'confirmed' ? 'completed' :
+                          'pending'
                     );
                   }}
                   className="px-4 py-2 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 shadow-sm transition-all"
                 >
-                  {selectedBooking.status === 'pending' ? 'Confirm Booking' : 
-                   selectedBooking.status === 'confirmed' ? 'Mark Complete' : 
-                   'Reactivate Booking'}
+                  {selectedBooking.status === 'pending' ? 'Confirm Booking' :
+                    selectedBooking.status === 'confirmed' ? 'Mark Complete' :
+                      'Reactivate Booking'}
                 </button>
               </div>
             </motion.div>

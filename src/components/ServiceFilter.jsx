@@ -493,70 +493,52 @@ const services = [
     icon: <CustomIcons.FoodDelivery />,
     description: 'Get food delivered from local restaurants',
     color: 'text-orange-500',
-    bgLight: 'bg-orange-50'
+    bgLight: 'bg-orange-50',
+    backgroundImage: 'https://media.istockphoto.com/id/1457979959/photo/snack-junk-fast-food-on-table-in-restaurant-soup-sauce-ornament-grill-hamburger-french-fries.jpg?s=612x612&w=0&k=20&c=QbFk2SfDb-7oK5Wo9dKmzFGNoi-h8HVEdOYWZbIjffo='
   },
   {
     id: 2,
     name: 'Grocery Delivery',
     category: 'delivery',
     icon: <CustomIcons.Groceries />,
-    description: 'Daily essentials at your doorstep',
+    description: 'Fresh groceries delivered to your doorstep',
     color: 'text-green-500',
-    bgLight: 'bg-green-50'
+    bgLight: 'bg-green-50',
+    backgroundImage: 'https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=400&auto=format&fit=crop',
+    link: '/grocery',  // Direct link to grocery section
+    popular: true
   },
   {
     id: 3,
+    name: 'Technicians',
+    category: 'technicians',
+    icon: <CustomIcons.Electrician />,
+    description: 'Professional home repair and installation services',
+    color: 'text-yellow-500',
+    bgLight: 'bg-yellow-50',
+    backgroundImage: 'https://images.pexels.com/photos/8005397/pexels-photo-8005397.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+    link: '/services/technicians',
+    popular: true,
+  },
+  {
+    id: 4,
     name: 'Organic Products',
     category: 'delivery',
     icon: <CustomIcons.Organic />,
     description: 'Fresh organic produce from local farms',
     color: 'text-emerald-500',
-    bgLight: 'bg-emerald-50'
+    bgLight: 'bg-emerald-50',
+    backgroundImage: 'https://images.unsplash.com/photo-1566385101042-1a0aa0c1268c?q=80&w=1470&auto=format&fit=crop'
   },
   {
-    id: 4,
+    id: 5,
     name: 'Medicine Delivery',
     category: 'delivery',
     icon: <CustomIcons.Medicine />,
     description: 'Quick delivery of medicines',
     color: 'text-pink-400',
-    bgLight: 'bg-pink-50'
-  },
-  {
-    id: 5,
-    name: 'Electrician',
-    category: 'technicians',
-    icon: <CustomIcons.Electrician />,
-    description: 'Professional electrical repair and installation',
-    color: 'text-yellow-500',
-    bgLight: 'bg-yellow-50'
-  },
-  {
-    id: 6,
-    name: 'Plumber',
-    category: 'technicians',
-    icon: <CustomIcons.Plumber />,
-    description: 'Expert plumbers for all water issues',
-    color: 'text-blue-500',
-    bgLight: 'bg-blue-50'
-  },
-  {
-    id: 7,
-    name: 'Carpenter',
-    category: 'technicians',
-    icon: <CustomIcons.Carpenter />,
-    description: 'Skilled furniture repair and creation',
-    color: 'text-amber-600',
-    bgLight: 'bg-amber-50'
-  },
-  {
-    id: 8,
-    name: 'AC Technician',
-    category: 'technicians',
-    icon: <CustomIcons.ACTechnician />,
-    description: 'AC servicing and repair experts',
-    color: 'text-cyan-500',
-    bgLight: 'bg-cyan-50'
+    bgLight: 'bg-pink-50',
+    backgroundImage: 'https://media.istockphoto.com/id/1225647177/photo/order-medicines-online-and-delivery.jpg?s=612x612&w=0&k=20&c=PSLelJ85yxg-iXi28su7xJ5-dB9SdENVStJFEhBrYAY='
   },
   {
     id: 9,
@@ -565,7 +547,8 @@ const services = [
     icon: <CustomIcons.Transport />,
     description: 'Vehicle rentals and logistics solutions',
     color: 'text-indigo-500',
-    bgLight: 'bg-indigo-50'
+    bgLight: 'bg-indigo-50',
+    backgroundImage: 'https://imgs.search.brave.com/YqaGUstRcVY2j8swTu8dukBBnrD3K4D5N52bbml3xrc/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly90aHVt/YnMuZHJlYW1zdGlt/ZS5jb20vYi9yb2Fk/LXRyYW5zcG9ydC1s/b3JyeS1tb3Rvcndh/eS1ldXJvcGVhbi1i/cml0aXNoLTgwMzQw/OTcxLmpwZw'
   },
   {
     id: 10,
@@ -574,7 +557,8 @@ const services = [
     icon: <CustomIcons.Security />,
     description: 'Reliable security guards services',
     color: 'text-purple-500',
-    bgLight: 'bg-purple-50'
+    bgLight: 'bg-purple-50',
+    backgroundImage: 'https://imgs.search.brave.com/dJObYy83XjYsYO3sgB-7YndhX5R-0QkCRoUgoJAfwIA/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvODMz/MDYzNTY0L3Bob3Rv/L3NlY3VyaXR5LWd1/YXJkLXN0YW5kaW5n/LW91dHNpZGUtdGhl/LWhvdXNlLmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1zdnpY/b2RaaUpZSENQSFNS/S0piLTU2ckhibXgz/el9GYkgtWHlMTGF2/N01ZPQ'
   },
   {
     id: 11,
@@ -583,7 +567,8 @@ const services = [
     icon: <CustomIcons.Sanitization />,
     description: 'Professional home and office sanitization',
     color: 'text-green-400',
-    bgLight: 'bg-green-50'
+    bgLight: 'bg-green-50',
+    backgroundImage: 'https://imgs.search.brave.com/sw2Jh4eoEdD4WvGSTb4zTCVINPvFb9GplOm0f_xay_g/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9j/b3JvbmF2aXJ1cy1w/YW5kZW1pYy1kaXNp/bmZlY3Rvci1wcm90/ZWN0aXZlLXN1aXQt/bWFzay1zcHJheXMt/ZGlzaW5mZWN0YW50/cy1ob3VzZS1vZmZp/Y2VfMTU1MDAzLTcz/MTQuanBnP3NlbXQ9/YWlzX2h5YnJpZA'
   },
   {
     id: 12,
@@ -592,7 +577,8 @@ const services = [
     icon: <CustomIcons.Events />,
     description: 'Complete event planning services',
     color: 'text-pink-500',
-    bgLight: 'bg-pink-50'
+    bgLight: 'bg-pink-50',
+    backgroundImage: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=80&w=400&auto=format&fit=crop'
   },
   {
     id: 13,
@@ -601,7 +587,8 @@ const services = [
     icon: <CustomIcons.Marketing />,
     description: 'Social media management and advertising',
     color: 'text-rose-500',
-    bgLight: 'bg-rose-50'
+    bgLight: 'bg-rose-50',
+    backgroundImage: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=400&auto=format&fit=crop'
   },
   {
     id: 14,
@@ -610,7 +597,8 @@ const services = [
     icon: <CustomIcons.HomeTutors />,
     description: 'Qualified tutors for all subjects',
     color: 'text-red-500',
-    bgLight: 'bg-red-50'
+    bgLight: 'bg-red-50',
+    backgroundImage: 'https://imgs.search.brave.com/-o6DsCf0S92n8XM2Vf3vgYIdldObf3aSyEjBnVcPv0U/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9yZXMu/Y2xvdWRpbmFyeS5j/b20vbGlhaXNvbi1p/bmMvaW1hZ2UvdXBs/b2FkL2NfZml0LGZf/YXV0byxxX2F1dG8s/d18xMjAwL3NlcnZp/Y2VzL3R1dG9ycy9i/YWNrZ3JvdW5kcy9t/YXRoLmpwZw'
   },
   {
     id: 15,
@@ -619,7 +607,8 @@ const services = [
     icon: <CustomIcons.Medical />,
     description: 'Lab sample collection and appointments',
     color: 'text-sky-500',
-    bgLight: 'bg-sky-50'
+    bgLight: 'bg-sky-50',
+    backgroundImage: 'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?q=80&w=400&auto=format&fit=crop'
   },
   {
     id: 16,
@@ -628,7 +617,8 @@ const services = [
     icon: <CustomIcons.Software />,
     description: 'Custom websites and app development',
     color: 'text-violet-500',
-    bgLight: 'bg-violet-50'
+    bgLight: 'bg-violet-50',
+    backgroundImage: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=400&auto=format&fit=crop'
   },
   {
     id: 17,
@@ -637,7 +627,8 @@ const services = [
     icon: <CustomIcons.Cleaning />,
     description: 'Professional home cleaning',
     color: 'text-teal-500',
-    bgLight: 'bg-teal-50'
+    bgLight: 'bg-teal-50',
+    backgroundImage: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=400&auto=format&fit=crop'
   },
   {
     id: 18,
@@ -646,7 +637,8 @@ const services = [
     icon: <CustomIcons.OnlineClasses />,
     description: 'Virtual classes for all age groups',
     color: 'text-orange-400',
-    bgLight: 'bg-orange-50'
+    bgLight: 'bg-orange-50',
+    backgroundImage: 'https://images.unsplash.com/photo-1584697964358-3e14ca57658b?q=80&w=400&auto=format&fit=crop'
   },
   {
     id: 19,
@@ -655,7 +647,8 @@ const services = [
     icon: <CustomIcons.LunchBox />,
     description: 'Fresh and hygienic lunch boxes delivered to your location',
     color: 'text-lime-500',
-    bgLight: 'bg-lime-50'
+    bgLight: 'bg-lime-50',
+    backgroundImage: 'https://imgs.search.brave.com/hL0uYUXn_ooQsvtua6t1ssuIlM6mNy6wh2A8cm6Xrfs/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9ydWtt/aW5pbTIuZmxpeGNh/cnQuY29tL2ltYWdl/LzYxMi82MTIvazNq/MXowdzAvbHVuY2gt/Ym94L3gvay80L3N0/ZWVsLWx1bmNib3gt/Z3JlZW4tZmxpcGth/cnQtc21hcnRidXkt/My1vcmlnaW5hbC1p/bWFmbW16d2hiZWV2/emd2LmpwZWc_cT03/MA'
   },
   {
     id: 20,
@@ -664,7 +657,8 @@ const services = [
     icon: <CustomIcons.FruitBox />,
     description: 'Nutritious fruit boxes delivered daily',
     color: 'text-green-700',
-    bgLight: 'bg-green-50'
+    bgLight: 'bg-green-50',
+    backgroundImage: 'https://imgs.search.brave.com/hfsb2bw5zm8x77g8kuebF4dSu56WUfKvcleOHRi4Z2o/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTMx/NDAxMjEyNi9waG90/by9tdWx0aWNvbG9y/ZWQtZnJ1aXRzLWlu/LWEtY3JhdGUtb24t/d2hpdGUtYmFja2dy/b3VuZC5qcGc_cz02/MTJ4NjEyJnc9MCZr/PTIwJmM9dVJfTVNv/SUt4c1Eya1BtdnVB/VURaN0pjRlRzRi1K/bzJ3UE92ZVN6bGxl/Yz0'
   },
   {
     id: 21,
@@ -681,7 +675,8 @@ const services = [
     ),
     description: 'Find rental houses and flats in your area',
     color: 'text-blue-400',
-    bgLight: 'bg-blue-50'
+    bgLight: 'bg-blue-50',
+    backgroundImage: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=400&auto=format&fit=crop'
   },
   {
     id: 22,
@@ -698,8 +693,61 @@ const services = [
     ),
     description: 'Professional packing and moving services',
     color: 'text-yellow-600',
-    bgLight: 'bg-yellow-50'
+    bgLight: 'bg-yellow-50',
+    backgroundImage: 'https://imgs.search.brave.com/fbsotaVuIbi-odEy_2I1XqsVJK9fZ4ASKWMjRUZMDRk/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9kZWF4/Mzh6dmthdTlkLmNs/b3VkZnJvbnQubmV0/L3Byb2QvYXNzZXRz/L2ltYWdlcy91cGxv/YWRzL3NlcnZpY2Vz/LzE2ODEyMDUzODhw/YWNrZXJzLWFuZC1t/b3ZlcnMtc2Vydmlj/ZS53ZWJwP2Y9d2Vi/cCZ3PTEyODA'
   },
+  // ...existing services...
+  {
+    id: 23,
+    name: 'YOUR CARE',
+    category: 'home',
+    icon: (
+      <div className="w-10 h-10 flex items-center justify-center rounded-md bg-fuchsia-600 text-white text-2xl font-bold">
+        🧑‍🤝‍🧑
+      </div>
+    ),
+    description: 'Flexible & Personal Care, Anytime. Elder, child, maternity, adult, pet, and patient care by trusted, verified caregivers.',
+    color: 'text-fuchsia-600',
+    bgLight: 'bg-fuchsia-50',
+    backgroundImage: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=400&auto=format&fit=crop',
+    details: `
+We provide trusted, professional, and verified caregivers for:
+🧓 Elder Care
+👶 Child Care
+🤰 Maternity Support
+🧍 Adult Assistance
+🐶 Pet Care
+🏥 Patient/Home Health Care
+
+Plans: Hourly • Daily • Weekly • Monthly
+Assurance: Background-verified caregivers, safety-first approach, and personalized attention.
+
+Your care. Your comfort. Your schedule.
+#SaathiCare | Empowering families & creating local employment
+  `
+  },
+  {
+    id: 24,
+    name: 'Outsourcing',
+    category: 'digital',
+    icon: (
+      <div className="w-10 h-10 flex items-center justify-center rounded-md bg-blue-700 text-white">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6">
+          <path d="M9 17v-2a4 4 0 0 1 8 0v2" strokeWidth="2" />
+          <circle cx="13" cy="7" r="4" strokeWidth="2" />
+          <rect x="2" y="17" width="20" height="5" rx="2" strokeWidth="2" />
+        </svg>
+      </div>
+    ),
+    description: 'Hire external experts to handle your business processes and operations efficiently.',
+    color: 'text-blue-700',
+    bgLight: 'bg-blue-50',
+    backgroundImage: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=400&auto=format&fit=crop',
+    details: `
+  Outsourcing services refer to the practice of hiring external third-party providers to handle specific business functions, operations, or processes instead of managing them in-house. Companies outsource to reduce costs, improve efficiency, and focus on their core business activities.
+    `
+  },
+
 ];
 
 const ServiceFilter = () => {
@@ -708,7 +756,6 @@ const ServiceFilter = () => {
   const [filteredServices, setFilteredServices] = useState([]);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
-  const [selectedService, setSelectedService] = useState(null);
   const searchRef = useRef(null);
   const filterRef = useRef(null);
   const navigate = useNavigate();
@@ -763,6 +810,59 @@ const ServiceFilter = () => {
     if (searchRef.current) {
       searchRef.current.focus();
     }
+  };
+
+  const handleServiceClick = (serviceName, service) => {
+    // If the service has a direct link, use that
+    if (service.link) {
+      navigate(service.link);
+      return;
+    }
+
+    // Otherwise, use the existing switch statement logic
+    switch (serviceName) {
+      case 'Food Delivery':
+        navigate('/food-delivery');
+        break;
+      case 'Medicine Delivery':
+        navigate('/services/medicine-delivery');
+        break;
+      case 'Sanitization':
+        navigate('/services/sanitization');
+        break;
+      case 'Event Management':
+        navigate('/services/event-management');
+        break;
+      case 'Organic Products':
+        navigate('/services/organic-products');
+        break;
+      case 'Security Services':
+        navigate('/services/security-services');
+        break;
+      case 'Transport Services':
+        navigate('/services/transport-services');
+        break;
+      case 'Technicians':
+        navigate('/services/technicians');
+        break;
+      default:
+        navigate(`/services/${serviceName.toLowerCase().replace(/\s+/g, '-')}`);
+    }
+  };
+
+  // Map service names to their route paths
+  const getServicePath = (name) => {
+    const serviceRoutes = {
+      'Sanitization': 'sanitization',
+      'Medicine Delivery': 'medicine-delivery',
+      'Event Management': 'event-management',
+      'Organic Products': 'organic-products',
+      'Security Services': 'security-services',
+      'Transport Services': 'transport-services',
+      'Fruit box Supply': 'fruit-box-supply'
+    };
+
+    return serviceRoutes[name] || name.toLowerCase().replace(/\s+/g, '-');
   };
 
   return (
@@ -923,27 +1023,44 @@ const ServiceFilter = () => {
                 whileHover={{ y: -5 }}
                 className="group"
               >
-                <div className="bg-white rounded-xl p-5 h-full border border-gray-200 hover:border-green-300 transition-all shadow-sm hover:shadow-md">
-                  <div className="flex items-start gap-4 mb-3">
-                    {service.icon}
-                    <h3 className="text-lg font-semibold text-gray-800 group-hover:text-green-600 mt-1">
-                      {service.name}
-                    </h3>
-                  </div>
+                <div
+                  className="relative bg-white rounded-xl overflow-hidden h-full border border-gray-200 hover:border-green-300 transition-all shadow-sm hover:shadow-md"
+                  onClick={() => handleServiceClick(service.name, service)}
+                  style={{
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                  }}
+                >
+                  {/* Background image with overlay */}
+                  <div
+                    className="absolute inset-0 bg-cover bg-center"
+                    style={{ backgroundImage: `url(${service.backgroundImage})` }}
+                  ></div>
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/20"></div>
 
-                  <p className="text-gray-600 text-sm mb-4">{service.description}</p>
+                  {/* Content */}
+                  <div className="relative z-10 p-5 h-full flex flex-col">
+                    <div className="flex items-start gap-4 mb-3">
+                      {service.icon}
+                      <h3 className="text-lg font-semibold text-white group-hover:text-green-300 mt-1 drop-shadow-md">
+                        {service.name}
+                      </h3>
+                    </div>
 
-                  <div className="flex justify-between items-center mt-auto pt-3 border-t border-gray-100">
-                    <span className="text-xs py-1 px-2.5 rounded-full bg-gray-100 text-gray-600">
-                      {serviceCategories.find(cat => cat.id === service.category)?.name}
-                    </span>
-                    <button
-                      onClick={() => setSelectedService(service)}
-                      className="text-sm font-medium text-green-600 hover:text-green-700 flex items-center gap-1"
-                    >
-                      View Details
-                      <ArrowRight size={14} className="ml-0.5" />
-                    </button>
+                    <p className="text-white text-sm mb-4 drop-shadow-md">{service.description}</p>
+
+                    <div className="flex justify-between items-center mt-auto pt-3 border-t border-white/20">
+                      <span className="text-xs py-1 px-2.5 rounded-full bg-white/20 text-white backdrop-blur-sm">
+                        {serviceCategories.find(cat => cat.id === service.category)?.name}
+                      </span>
+                      <Link
+                        to={service.link || `/services/${getServicePath(service.name)}`}
+                        className="text-sm font-medium text-white hover:text-green-300 flex items-center gap-1"
+                      >
+                        View Details
+                        <ArrowRight size={14} className="ml-0.5" />
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </motion.div>
@@ -966,83 +1083,6 @@ const ServiceFilter = () => {
             </button>
           </div>
         )}
-
-        {/* Details Modal */}
-        <AnimatePresence>
-          {selectedService && (
-            <motion.div
-              className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
-              <motion.div
-                className="bg-white rounded-xl shadow-2xl max-w-lg w-full p-6 relative"
-                initial={{ scale: 0.95, y: 40 }}
-                animate={{ scale: 1, y: 0 }}
-                exit={{ scale: 0.95, y: 40 }}
-              >
-                <button
-                  className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
-                  onClick={() => setSelectedService(null)}
-                >
-                  <X size={24} />
-                </button>
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-16 h-16">{selectedService.icon}</div>
-                  <div>
-                    <h2 className="text-2xl font-bold text-gray-800">{selectedService.name}</h2> {/* <-- changed */}
-                    <div className="flex items-center text-sm text-gray-600 mt-1"> {/* <-- changed */}
-                      <Star size={16} className="text-purple-600 mr-1" />
-                      {serviceDetails[selectedService.name]?.rating || 4.5}
-                      <span className="ml-1">({serviceDetails[selectedService.name]?.reviews || "1K"} reviews)</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 text-lg font-semibold mb-2 text-gray-800"> {/* <-- changed */}
-                  ₹{serviceDetails[selectedService.name]?.price || 500}
-                  {serviceDetails[selectedService.name]?.oldPrice && (
-                    <span className="line-through text-gray-400 text-base font-normal">
-                      ₹{serviceDetails[selectedService.name].oldPrice}
-                    </span>
-                  )}
-                  <span className="text-gray-600 font-normal flex items-center"> {/* <-- changed */}
-                    <Clock size={16} className="mr-1" />
-                    {serviceDetails[selectedService.name]?.duration || "1 hr"}
-                  </span>
-                </div>
-                <div className="text-green-600 text-sm mb-4">
-                  {serviceDetails[selectedService.name]?.perUnit}
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold mb-2 text-gray-800">Included</h3> {/* <-- changed */}
-                  <ul className="space-y-2">
-                    {(serviceDetails[selectedService.name]?.included || []).map((item, idx) => (
-                      <li key={idx} className="flex items-start gap-2">
-                        <span className="mt-1 text-green-500">•</span>
-                        <div>
-                          <div className="font-medium text-gray-700">{item.title}</div> {/* <-- changed */}
-                          <div className="text-gray-600 text-sm">{item.desc}</div>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="mt-8 flex justify-end">
-                  <button
-                    className="px-6 py-2 rounded-lg bg-green-500 text-white font-semibold hover:bg-green-600 transition"
-                    onClick={() => {
-                      setSelectedService(null);
-                      navigate('/book', { state: { serviceType: selectedService.name } });
-                    }}
-                  >
-                    Book Now
-                  </button>
-                </div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
         <div className="text-center mt-12">
           <Link
             to="/book"
@@ -1058,4 +1098,3 @@ const ServiceFilter = () => {
 };
 
 export default ServiceFilter;
-export { services, serviceDetails };

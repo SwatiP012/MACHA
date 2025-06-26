@@ -4,7 +4,8 @@ import {
   Users, Package, MessageSquare, Calendar,
   TrendingUp, BarChart, Settings, Home,
   ChevronLeft, ChevronRight, LogOut, Menu as MenuIcon,
-  User, Bell, ChevronDown
+  User, Bell, ChevronDown, ShoppingBag, Tag, Truck,
+  ClipboardList, LayoutDashboard
 } from 'lucide-react';
 import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
@@ -22,6 +23,7 @@ const AdminDashboard = () => {
   const [unreadCount, setUnreadCount] = useState(0);
   const [notificationLoading, setNotificationLoading] = useState(false);
   const [websocketConnected, setWebsocketConnected] = useState(false);
+  const [openGroceryMenu, setOpenGroceryMenu] = useState(false);
   const { currentUser, loading, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -59,16 +61,16 @@ const AdminDashboard = () => {
   // Fetch notifications from the server
   const fetchNotifications = async () => {
     if (!currentUser || currentUser.role !== 'admin') return;
-    
+
     try {
       setNotificationLoading(true);
       const token = localStorage.getItem('token');
-      
+
       const response = await axios.get(
-        `${API_BASE_URL}/admin/notifications`, 
+        `${API_BASE_URL}/admin/notifications`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      
+
       if (response.data && response.data.success) {
         setNotifications(response.data.notifications);
         // Count unread notifications
@@ -86,61 +88,61 @@ const AdminDashboard = () => {
   useEffect(() => {
     // Don't setup if user is not an admin
     if (!currentUser || currentUser.role !== 'admin') return;
-    
+
     // Initial fetch
     fetchNotifications();
-    
+
     // Set up WebSocket connection
     websocketService.connect();
-    
+
     // Handle connection status
     const connectionHandler = (data) => {
       setWebsocketConnected(data.status === 'connected');
     };
-    
+
     // Handle notifications
     const notificationHandler = (data) => {
       if (data.notification) {
         // Add new notification to the list
         setNotifications(prev => [data.notification, ...prev]);
         setUnreadCount(prev => prev + 1);
-        
+
         // Show browser notification
         if (Notification.permission === 'granted') {
-          new Notification('MACHA Admin', { 
+          new Notification('MACHA Admin', {
             body: data.notification.message,
             icon: '/favicon.ico'
           });
         }
       }
     };
-    
+
     // Register event listeners
     const unsubFunctions = [
       websocketService.on('connection', connectionHandler),
       websocketService.on('notification', notificationHandler)
     ];
-    
+
     // Store unsubscribe functions
     wsUnsubscribeFunctions.current = unsubFunctions;
-    
+
     // Join admin notification room
     websocketService.joinRoom('admin-notifications');
-    
+
     // If WebSocket is not working, fallback to polling
     if (!websocketConnected) {
       // Setup polling interval (every 30 seconds)
       notificationIntervalRef.current = setInterval(fetchNotifications, 30000);
     }
-    
+
     return () => {
       // Clean up WebSocket listeners
       wsUnsubscribeFunctions.current.forEach(unsub => unsub());
       wsUnsubscribeFunctions.current = [];
-      
+
       // Leave notification room
       websocketService.leaveRoom('admin-notifications');
-      
+
       // Clear polling interval
       if (notificationIntervalRef.current) {
         clearInterval(notificationIntervalRef.current);
@@ -163,7 +165,7 @@ const AdminDashboard = () => {
   const markNotificationAsRead = async (id) => {
     try {
       const token = localStorage.getItem('token');
-      
+
       // Try to use WebSocket if connected
       if (websocketConnected) {
         websocketService.markMessageAsRead(id);
@@ -175,14 +177,14 @@ const AdminDashboard = () => {
           { headers: { Authorization: `Bearer ${token}` } }
         );
       }
-      
+
       // Update local state
-      setNotifications(prev => 
-        prev.map(notif => 
+      setNotifications(prev =>
+        prev.map(notif =>
           notif._id === id ? { ...notif, read: true } : notif
         )
       );
-      
+
       // Update unread count
       setUnreadCount(prev => Math.max(0, prev - 1));
     } catch (error) {
@@ -194,13 +196,13 @@ const AdminDashboard = () => {
   const markAllAsRead = async () => {
     try {
       const token = localStorage.getItem('token');
-      
+
       await axios.patch(
         `${API_BASE_URL}/admin/notifications/mark-all-read`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      
+
       // Update local state
       setNotifications(prev => prev.map(notif => ({ ...notif, read: true })));
       setUnreadCount(0);
@@ -218,10 +220,21 @@ const AdminDashboard = () => {
     { name: 'Dashboard', icon: <Home size={20} />, path: '/admin' },
     { name: 'Orders', icon: <Package size={20} />, path: '/admin/orders' },
     { name: 'Users', icon: <Users size={20} />, path: '/admin/users' },
-    { name: 'Messages', icon: <MessageSquare size={20} />, path: '/admin/messages' },
+    { name: 'Restaurants', icon: <TrendingUp size={20} />, path: '/admin/restaurants' },
+    // { name: 'Messages', icon: <MessageSquare size={20} />, path: '/admin/messages' },
     { name: 'Bookings', icon: <Calendar size={20} />, path: '/admin/bookings' },
     { name: 'Analytics', icon: <BarChart size={20} />, path: '/admin/analytics' },
     { name: 'Settings', icon: <Settings size={20} />, path: '/admin/security' },
+  ];
+
+  // Grocery navigation items
+  const groceryNavItems = [
+    { name: 'Dashboard', icon: <LayoutDashboard size={18} />, path: '/admin/grocery/dashboard' },
+    { name: 'Products', icon: <Package size={18} />, path: '/admin/grocery/products' },
+    { name: 'Categories', icon: <Tag size={18} />, path: '/admin/grocery/categories' },
+    { name: 'Inventory', icon: <ClipboardList size={18} />, path: '/admin/grocery/inventory' },
+    { name: 'Orders', icon: <Truck size={18} />, path: '/admin/grocery/orders' },
+    // { name: 'Analytics', icon: <BarChart size={18} />, path: '/admin/grocery/analytics' }
   ];
 
   const isActive = (path) => {
@@ -250,18 +263,23 @@ const AdminDashboard = () => {
     const date = new Date(timeString);
     const now = new Date();
     const diffMinutes = Math.floor((now - date) / (60 * 1000));
-    
+
     if (diffMinutes < 1) return 'Just now';
     if (diffMinutes < 60) return `${diffMinutes} min ago`;
-    
+
     const diffHours = Math.floor(diffMinutes / 60);
     if (diffHours < 24) return `${diffHours} hours ago`;
-    
+
     const diffDays = Math.floor(diffHours / 24);
     if (diffDays === 1) return 'Yesterday';
     if (diffDays < 7) return `${diffDays} days ago`;
-    
+
     return date.toLocaleDateString();
+  };
+
+  // Toggle grocery submenu
+  const toggleGroceryMenu = () => {
+    setOpenGroceryMenu(!openGroceryMenu);
   };
 
   return (
@@ -296,6 +314,48 @@ const AdminDashboard = () => {
 
         {/* Navigation Links */}
         <nav className="p-4 space-y-2">
+          {/* Add Grocery Menu Item */}
+          <div className="mb-2">
+            <button
+              onClick={toggleGroceryMenu}
+              className={`flex items-center w-full rounded-lg px-3 py-2.5 text-sm transition-all ${location.pathname.startsWith('/admin/grocery')
+                  ? 'bg-green-100 text-green-800 font-semibold'
+                  : 'text-white hover:bg-green-600 hover:text-green-100'
+                }`}
+            >
+              <span className="mr-3"><ShoppingBag size={20} /></span>
+              {sidebarOpen && (
+                <>
+                  <span className="flex-1 text-left">Grocery</span>
+                  {openGroceryMenu ?
+                    <ChevronDown size={16} /> :
+                    <ChevronRight size={16} />
+                  }
+                </>
+              )}
+            </button>
+
+            {/* Grocery submenu */}
+            {sidebarOpen && openGroceryMenu && (
+              <div className="pl-10 mt-2 space-y-1">
+                {groceryNavItems.map((item) => (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    className={`flex items-center rounded-lg px-3 py-2 text-sm transition-all ${location.pathname === item.path
+                        ? 'bg-green-100 text-green-800 font-semibold'
+                        : 'text-white hover:bg-green-600 hover:text-green-100'
+                      }`}
+                  >
+                    <span className="mr-3">{item.icon}</span>
+                    <span>{item.name}</span>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Existing navigation links */}
           {navigationLinks.map((item) => (
             <Link
               key={item.name}
@@ -345,6 +405,44 @@ const AdminDashboard = () => {
               </div>
 
               <nav className="p-4 space-y-2">
+                {/* Add Grocery Menu Item for mobile */}
+                <div className="mb-2">
+                  <button
+                    onClick={toggleGroceryMenu}
+                    className={`flex items-center w-full rounded-lg px-3 py-2.5 text-sm transition-all ${location.pathname.startsWith('/admin/grocery')
+                        ? 'bg-green-100 text-green-800 font-semibold'
+                        : 'text-white hover:bg-green-600 hover:text-green-100'
+                      }`}
+                  >
+                    <span className="mr-3"><ShoppingBag size={20} /></span>
+                    <span className="flex-1 text-left">Grocery</span>
+                    {openGroceryMenu ?
+                      <ChevronDown size={16} /> :
+                      <ChevronRight size={16} />
+                    }
+                  </button>
+
+                  {openGroceryMenu && (
+                    <div className="pl-10 mt-2 space-y-1">
+                      {groceryNavItems.map((item) => (
+                        <Link
+                          key={item.path}
+                          to={item.path}
+                          onClick={() => setMobileMenuOpen(false)}
+                          className={`flex items-center rounded-lg px-3 py-2 text-sm transition-all ${location.pathname === item.path
+                              ? 'bg-green-100 text-green-800 font-semibold'
+                              : 'text-white hover:bg-green-600 hover:text-green-100'
+                            }`}
+                        >
+                          <span className="mr-3">{item.icon}</span>
+                          <span>{item.name}</span>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Existing mobile navigation links */}
                 {navigationLinks.map((item) => (
                   <Link
                     key={item.name}
@@ -396,7 +494,7 @@ const AdminDashboard = () => {
               <div className={`w-1.5 h-1.5 rounded-full ${websocketConnected ? 'bg-green-300' : 'bg-red-300'}`}></div>
               <span>{websocketConnected ? 'Connected' : 'Offline'}</span>
             </div>
-            
+
             {/* Notifications Dropdown */}
             <div className="relative" ref={notificationDropdownRef}>
               <button
@@ -429,7 +527,7 @@ const AdminDashboard = () => {
                   >
                     <div className="p-3 border-b border-green-100 flex justify-between items-center">
                       <h3 className="text-sm font-semibold text-green-700">Notifications</h3>
-                      <button 
+                      <button
                         onClick={() => fetchNotifications()}
                         className="p-1 rounded hover:bg-green-50 text-green-600"
                         title="Refresh notifications"
@@ -467,7 +565,7 @@ const AdminDashboard = () => {
                                   {formatNotificationTime(notification.createdAt)}
                                 </p>
                                 {notification.actionUrl && (
-                                  <Link 
+                                  <Link
                                     to={notification.actionUrl}
                                     className="text-xs text-blue-600 hover:underline"
                                     onClick={(e) => e.stopPropagation()}
@@ -489,7 +587,7 @@ const AdminDashboard = () => {
 
                     {notifications.length > 0 && (
                       <div className="p-2 border-t border-green-100 text-center">
-                        <button 
+                        <button
                           className="text-xs text-green-600 hover:text-green-800 font-medium"
                           onClick={markAllAsRead}
                         >

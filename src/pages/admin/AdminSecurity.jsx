@@ -10,7 +10,7 @@ const AdminSecurity = () => {
     newPassword: '',
     confirmPassword: ''
   });
-  
+
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -24,7 +24,7 @@ const AdminSecurity = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    
+
     // Clear specific field error
     if (formErrors[name]) {
       setFormErrors({ ...formErrors, [name]: '' });
@@ -33,35 +33,35 @@ const AdminSecurity = () => {
 
   const validateForm = () => {
     const errors = {};
-    
+
     if (!formData.currentPassword) {
       errors.currentPassword = 'Current password is required';
     }
-    
+
     if (!formData.newPassword) {
       errors.newPassword = 'New password is required';
     } else if (formData.newPassword.length < 8) {
       errors.newPassword = 'Password must be at least 8 characters';
     }
-    
+
     if (!formData.confirmPassword) {
       errors.confirmPassword = 'Please confirm your new password';
     } else if (formData.newPassword !== formData.confirmPassword) {
       errors.confirmPassword = 'Passwords do not match';
     }
-    
+
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Validate form
     if (!validateForm()) {
       return;
     }
-    
+
     setLoading(true);
     setError('');
     setSuccess('');
@@ -79,7 +79,7 @@ const AdminSecurity = () => {
           }
         }
       );
-      
+
       setSuccess('Password changed successfully!');
       setFormData({
         currentPassword: '',
@@ -99,26 +99,26 @@ const AdminSecurity = () => {
       <Helmet>
         <title>Security Settings | MACHA Admin</title>
       </Helmet>
-      
+
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Security Settings</h1>
         <p className="text-gray-600">Change your password and manage account security</p>
       </div>
-      
+
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2 mb-6">
           <AlertCircle size={16} className="shrink-0" />
           <span>{error}</span>
         </div>
       )}
-      
+
       {success && (
         <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center gap-2 mb-6">
           <Check size={16} className="shrink-0" />
           <span>{success}</span>
         </div>
       )}
-      
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -131,7 +131,7 @@ const AdminSecurity = () => {
             Ensure your account is using a strong, secure password
           </p>
         </div>
-        
+
         <div className="p-6">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
@@ -158,7 +158,7 @@ const AdminSecurity = () => {
                 <p className="text-red-500 text-xs mt-1">{formErrors.currentPassword}</p>
               )}
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
               <div className="relative">
@@ -183,7 +183,7 @@ const AdminSecurity = () => {
                 <p className="text-red-500 text-xs mt-1">{formErrors.newPassword}</p>
               )}
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
               <div className="relative">
@@ -208,7 +208,7 @@ const AdminSecurity = () => {
                 <p className="text-red-500 text-xs mt-1">{formErrors.confirmPassword}</p>
               )}
             </div>
-            
+
             <div className="pt-4">
               <button
                 type="submit"
@@ -230,7 +230,7 @@ const AdminSecurity = () => {
             </div>
           </form>
         </div>
-        
+
         <div className="p-6 bg-gray-50">
           <h3 className="text-sm font-semibold text-gray-700">Password Recommendations</h3>
           <ul className="mt-2 text-sm text-gray-600 space-y-1">
@@ -241,7 +241,7 @@ const AdminSecurity = () => {
           </ul>
         </div>
       </motion.div>
-      
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -254,7 +254,7 @@ const AdminSecurity = () => {
             Add an extra layer of security to your account
           </p>
         </div>
-        
+
         <div className="p-6">
           <div className="flex items-center justify-between">
             <div>

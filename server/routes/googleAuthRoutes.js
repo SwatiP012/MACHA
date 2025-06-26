@@ -7,8 +7,8 @@ const jwt = require('jsonwebtoken');
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 // Google auth callback
-router.get('/google/callback', 
-  passport.authenticate('google', { 
+router.get('/google/callback',
+  passport.authenticate('google', {
     failureRedirect: `${process.env.CLIENT_URL}/login?error=google_auth_failed`,
     session: false
   }),
@@ -20,7 +20,7 @@ router.get('/google/callback',
         process.env.JWT_SECRET,
         { expiresIn: '7d' }
       );
-      
+
       // Redirect to frontend with token and user ID
       const redirectUrl = `${process.env.CLIENT_URL}/login?token=${token}&userId=${req.user._id}`;
       console.log('Redirecting to:', redirectUrl);

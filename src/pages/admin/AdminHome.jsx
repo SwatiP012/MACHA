@@ -22,33 +22,33 @@ const AdminHome = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      
+
       if (!token) {
         setError('Authentication required. Please login again.');
         setLoading(false);
         return;
       }
-      
+
       // Get dashboard stats
       const statsResponse = await axios.get(`${API_BASE_URL}/admin/stats`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      
+
       // Get recent orders
       const ordersResponse = await axios.get(`${API_BASE_URL}/admin/orders?limit=5`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      
+
       // Handle stats response
       if (statsResponse.data) {
         setStats(statsResponse.data);
       }
-      
+
       // Handle orders response
       if (ordersResponse.data && ordersResponse.data.orders) {
         setRecentOrders(ordersResponse.data.orders);
       }
-      
+
       setError(null);
     } catch (err) {
       console.error('Error fetching admin data:', err);
@@ -151,16 +151,16 @@ const AdminHome = () => {
       <Helmet>
         <title>Admin Dashboard | MACHA Services</title>
       </Helmet>
-      
+
       <div className="flex justify-between items-start">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Dashboard Overview</h1>
           <p className="text-gray-600">Welcome to your admin dashboard</p>
         </div>
-        
+
         <div className="flex gap-2">
-          <button 
-            onClick={handleRefresh} 
+          <button
+            onClick={handleRefresh}
             className="flex items-center gap-2 px-3 py-2 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 text-gray-700"
           >
             <RefreshCw size={16} className={refreshing ? "animate-spin" : ""} />
@@ -204,7 +204,7 @@ const AdminHome = () => {
           </motion.div>
         ))}
       </div>
-      
+
       {/* Recent Orders */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -218,7 +218,7 @@ const AdminHome = () => {
             View All Orders
           </a>
         </div>
-        
+
         <div className="overflow-x-auto">
           {refreshing ? (
             <div className="flex justify-center items-center py-12">

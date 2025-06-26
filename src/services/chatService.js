@@ -19,7 +19,7 @@ const chatService = {
     if (useMockResponses) {
       return { status: 'online' };
     }
-    
+
     try {
       const response = await axios.get(`${API_URL}/chat/status`);
       return response.data;
@@ -29,7 +29,7 @@ const chatService = {
       return { status: 'offline' };
     }
   },
-  
+
   /**
    * Get chat history
    * @param {number} limit - Maximum number of messages to retrieve
@@ -48,11 +48,11 @@ const chatService = {
         }
       ];
     }
-    
+
     try {
       const token = localStorage.getItem('token');
       const headers = token ? { Authorization: `Bearer ${token}` } : {};
-      
+
       const response = await axios.get(`${API_URL}/messages?limit=${limit}`, { headers });
       return response.data.messages;
     } catch (error) {
@@ -61,7 +61,7 @@ const chatService = {
       } else {
         console.error("Error getting chat history:", error.message);
       }
-      
+
       // Return default welcome message instead of throwing an error
       return [
         {
@@ -73,7 +73,7 @@ const chatService = {
       ];
     }
   },
-  
+
   /**
    * Get new messages after a specific timestamp
    * @param {string} timestamp - ISO timestamp to get messages after
@@ -84,13 +84,13 @@ const chatService = {
     if (useMockResponses) {
       return [];
     }
-    
+
     try {
       const token = localStorage.getItem('token');
       const headers = token ? { Authorization: `Bearer ${token}` } : {};
-      
+
       const response = await axios.get(
-        `${API_URL}/messages/new?after=${timestamp}`, 
+        `${API_URL}/messages/new?after=${timestamp}`,
         { headers }
       );
       return response.data.messages;
@@ -102,7 +102,7 @@ const chatService = {
       return [];
     }
   },
-  
+
   /**
    * Send a message
    * @param {Object} messageData - Message data object
@@ -112,7 +112,7 @@ const chatService = {
     // Always simulate responses in development mode
     if (useMockResponses) {
       console.info("Using simulated message response in development mode");
-      
+
       // Simulate API response with a delay
       return new Promise(resolve => {
         setTimeout(() => {
@@ -126,16 +126,16 @@ const chatService = {
         }, 300);
       });
     }
-    
+
     try {
       const token = localStorage.getItem('token');
       const headers = token ? { Authorization: `Bearer ${token}` } : {};
-      
+
       const response = await axios.post(`${API_URL}/messages`, messageData, { headers });
       return response;
     } catch (error) {
       console.error("Error sending message:", error.message);
-      
+
       // Return a simulated success response even when the API fails
       return {
         data: {
@@ -147,7 +147,7 @@ const chatService = {
       };
     }
   },
-  
+
   /**
    * Helper function to check if the chat API is available
    * @returns {Promise<boolean>} True if the API is available

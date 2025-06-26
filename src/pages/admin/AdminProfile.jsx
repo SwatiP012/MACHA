@@ -15,7 +15,7 @@ const AdminProfile = () => {
     address: '',
     profileImage: ''
   });
-  
+
   const [formErrors, setFormErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState('');
@@ -36,7 +36,7 @@ const AdminProfile = () => {
         address: currentUser.address || '',
         profileImage: currentUser.profileImage || ''
       });
-      
+
       if (currentUser.profileImage) {
         setPreviewUrl(currentUser.profileImage);
       }
@@ -46,7 +46,7 @@ const AdminProfile = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setProfileData({ ...profileData, [name]: value });
-    
+
     // Clear specific field error
     if (formErrors[name]) {
       setFormErrors({ ...formErrors, [name]: '' });
@@ -116,12 +116,12 @@ const AdminProfile = () => {
 
     try {
       let profileImageUrl = profileData.profileImage;
-      
+
       // Upload image if a new one was selected
       if (imageFile) {
         const formData = new FormData();
         formData.append('image', imageFile);
-        
+
         const uploadResponse = await axios.post(
           `${API_BASE_URL}/admin/upload-image`,
           formData,
@@ -132,10 +132,10 @@ const AdminProfile = () => {
             }
           }
         );
-        
+
         profileImageUrl = uploadResponse.data.imageUrl;
       }
-      
+
       // Update profile
       const response = await axios.put(
         `${API_BASE_URL}/admin/profile`,
@@ -149,14 +149,14 @@ const AdminProfile = () => {
           }
         }
       );
-      
+
       // Update local context
       updateUserProfile({
         ...currentUser,
         ...profileData,
         profileImage: profileImageUrl
       });
-      
+
       setSuccess('Profile updated successfully!');
       setIsEditing(false);
     } catch (err) {
@@ -172,10 +172,10 @@ const AdminProfile = () => {
       <Helmet>
         <title>Admin Profile | MACHA Services</title>
       </Helmet>
-      
+
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Admin Profile</h1>
-        
+
         <button
           onClick={() => setIsEditing(!isEditing)}
           className="px-4 py-2 text-sm font-medium rounded-lg border bg-white text-gray-700 hover:bg-gray-50"
@@ -183,21 +183,21 @@ const AdminProfile = () => {
           {isEditing ? 'Cancel' : 'Edit Profile'}
         </button>
       </div>
-      
+
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2 mb-6">
           <AlertCircle size={16} className="shrink-0" />
           <span>{error}</span>
         </div>
       )}
-      
+
       {success && (
         <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center gap-2 mb-6">
           <Check size={16} className="shrink-0" />
           <span>{success}</span>
         </div>
       )}
-      
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -209,9 +209,9 @@ const AdminProfile = () => {
             <div className="relative md:w-1/4">
               <div className="w-32 h-32 mx-auto rounded-full border-4 border-gray-50 shadow overflow-hidden bg-gray-100">
                 {previewUrl ? (
-                  <img 
-                    src={previewUrl} 
-                    alt="Profile" 
+                  <img
+                    src={previewUrl}
+                    alt="Profile"
                     className="w-full h-full object-cover"
                   />
                 ) : (
@@ -220,13 +220,13 @@ const AdminProfile = () => {
                   </div>
                 )}
               </div>
-              
+
               {isEditing && (
                 <div className="mt-4 text-center">
                   <label className="cursor-pointer inline-flex items-center justify-center px-4 py-2 text-sm bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium">
                     <Camera size={18} className="mr-2" />
                     <span>Change Photo</span>
-                    <input 
+                    <input
                       type="file"
                       accept="image/*"
                       onChange={handleImageChange}
@@ -236,7 +236,7 @@ const AdminProfile = () => {
                 </div>
               )}
             </div>
-            
+
             <div className="flex-1">
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
@@ -256,7 +256,7 @@ const AdminProfile = () => {
                     <p className="text-red-500 text-xs mt-1">{formErrors.name}</p>
                   )}
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
                   <div className="relative">
@@ -274,7 +274,7 @@ const AdminProfile = () => {
                     <p className="text-red-500 text-xs mt-1">{formErrors.email}</p>
                   )}
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
                   <div className="relative">
@@ -293,7 +293,7 @@ const AdminProfile = () => {
                     <p className="text-red-500 text-xs mt-1">{formErrors.phoneNumber}</p>
                   )}
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
                   <div className="relative">
@@ -312,7 +312,7 @@ const AdminProfile = () => {
                     <p className="text-red-500 text-xs mt-1">{formErrors.address}</p>
                   )}
                 </div>
-                
+
                 {isEditing && (
                   <div className="pt-4">
                     <button
@@ -338,7 +338,7 @@ const AdminProfile = () => {
             </div>
           </div>
         </div>
-        
+
         <div className="bg-gray-50 p-6">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
@@ -354,7 +354,7 @@ const AdminProfile = () => {
           </div>
         </div>
       </motion.div>
-      
+
       <div className="mt-8 bg-white rounded-lg shadow-md overflow-hidden">
         <div className="p-6 border-b border-gray-200">
           <h2 className="text-lg font-semibold text-gray-800">Admin Permissions</h2>
@@ -362,7 +362,7 @@ const AdminProfile = () => {
             As an admin, you have access to manage all platform operations
           </p>
         </div>
-        
+
         <div className="p-6 bg-gray-50">
           <ul className="space-y-3">
             <li className="flex items-center gap-3 text-sm text-gray-700">

@@ -2,20 +2,47 @@ import { useState, useEffect, useRef } from 'react';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { Link as ScrollLink } from 'react-scroll';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Phone, User, Calendar } from 'lucide-react';
+import { Menu, X, Phone, User, Moon, Sun, Calendar, Search } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import machaLogo from '../assets/macha-logo.jpg';
 
-import { services, serviceDetails } from './ServiceFilter';
-import ServiceDetailsModal from './ServiceDetailsModal';
+// Static services array
+const allServices = [
+  { name: 'Digital Marketing', slug: 'digital-marketing' },
+  { name: 'Event Management', slug: 'event-management' },
+  { name: 'FruitBox Supply', slug: 'fruit-box-supply' },
+  { name: 'Home Tutors', slug: 'home-tutors' },
+  { name: 'House Cleaning', slug: 'home-keeping-' },
+  { name: 'Technicians', slug: 'technicians' },
+  { name: 'Software Development', slug: 'software-development' },
+  { name: 'Medicine Delivery', slug: 'medicine-delivery' },
+  { name: 'Packer and Movers', slug: 'packers-and-movers' },
+  { name: 'Transportation services', slug: 'transport-services' },
+  { name: 'Medical Services', slug: 'medical-services' },
+  { name: 'Package Delivery', slug: 'package-delivery' },
+  { name: 'House Rental', slug: 'house-rental' },
+  { name: 'Grocery Delivery', slug: 'grocery' },
+  { name: 'Lunch Box Supply', slug: 'lunch-box-supply' },
+  { name: 'Online Classes', slug: 'online-classes' },
+  { name: 'Organic Products', slug: 'organic-products' },
+  { name: 'Sanitization Services', slug: 'sanitization' },
+  { name: 'Security Services', slug: 'security-services' },
+  { name: 'Food Delivery', slug: 'food-delivery' },
+  { name: 'Your Care', slug: 'your-care' },
+
+
+
+
+];
 
 const Navbar = ({ scrolled, darkMode, toggleDarkMode }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filteredServices, setFilteredServices] = useState([]);
-  const [selectedService, setSelectedService] = useState(null);
+  const [serviceSearch, setServiceSearch] = useState('');
+  const [serviceResults, setServiceResults] = useState([]);
+  const [showServiceDropdown, setShowServiceDropdown] = useState(false);
+
   const location = useLocation();
   const dropdownRef = useRef(null);
   const { currentUser, logout } = useAuth();
@@ -46,22 +73,11 @@ const Navbar = ({ scrolled, darkMode, toggleDarkMode }) => {
   }, []);
 
   useEffect(() => {
+    // Redirect admin users to admin dashboard when they access pages with the Navbar
     if (currentUser?.role === 'admin') {
       navigate('/admin', { replace: true });
     }
   }, [currentUser, navigate]);
-
-  useEffect(() => {
-    if (searchQuery.trim() === '') {
-      setFilteredServices([]);
-    } else {
-      setFilteredServices(
-        services.filter(service =>
-          service.name.toLowerCase().includes(searchQuery.toLowerCase())
-        )
-      );
-    }
-  }, [searchQuery]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -89,11 +105,38 @@ const Navbar = ({ scrolled, darkMode, toggleDarkMode }) => {
     }
   };
 
+  // Service search handlers (frontend only)
+  const handleServiceSearch = (query) => {
+    setServiceSearch(query);
+    if (query.length < 2) {
+      setServiceResults([]);
+      setShowServiceDropdown(false);
+      return;
+    }
+    const results = allServices.filter(s =>
+      s.name.toLowerCase().includes(query.toLowerCase())
+    );
+    setServiceResults(results);
+    setShowServiceDropdown(true);
+  };
+
+  const handleServiceSelect = (service) => {
+    setServiceSearch('');
+    setServiceResults([]);
+    setShowServiceDropdown(false);
+    if (service.slug === 'food-delivery') {
+      navigate('/food-delivery');
+    } else if (service.slug === 'grocery') {
+      navigate('/grocery');
+    } else {
+      navigate(`/services/${service.slug}`);
+    }
+  };
+
   const navLinks = [
     { name: 'Home', path: 'hero', type: 'scroll' },
     { name: 'About', path: 'about', type: 'scroll' },
     { name: 'Services', path: 'services', type: 'scroll' },
-    { name: 'Gallery', path: 'gallery', type: 'scroll' },
     { name: 'Contact', path: 'contact', type: 'scroll' },
   ];
 
@@ -127,39 +170,31 @@ const Navbar = ({ scrolled, darkMode, toggleDarkMode }) => {
           </RouterLink>
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-4">
-            {/* Search Bar */}
+            {/* Service Search Bar */}
             <div className="relative">
               <input
                 type="text"
+                className="pl-10 pr-4 py-2 w-64 rounded-full text-sm text-gray-700 bg-gray-100 border-none focus:outline-none focus:ring-2 focus:ring-green-500/50 placeholder-gray-400"
                 placeholder="Search services..."
-                value={searchQuery}
-                onChange={e => {
-                  setSearchQuery(e.target.value);
-                  setSelectedService(null);
-                }}
-                className="px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 text-black"
-                style={{ minWidth: 200 }}
+                value={serviceSearch}
+                onChange={e => handleServiceSearch(e.target.value)}
+                onFocus={() => serviceResults.length > 0 && setShowServiceDropdown(true)}
+                onBlur={() => setTimeout(() => setShowServiceDropdown(false), 150)}
               />
-              {searchQuery && filteredServices.length > 0 && (
-                <ul className="absolute left-0 mt-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg z-50">
-                  {filteredServices.map(service => (
-                    <li
-                      key={service.name}
-                      className="px-4 py-2 hover:bg-green-100 cursor-pointer text-black"
-                      onClick={() => {
-                        setSearchQuery(service.name);
-                        setFilteredServices([]);
-                        setSelectedService(service);
-                      }}
+              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                <Search size={18} />
+              </span>
+              {showServiceDropdown && serviceResults.length > 0 && (
+                <div className="absolute z-30 mt-1 w-full bg-white border rounded shadow-lg max-h-60 overflow-y-auto">
+                  {serviceResults.map(service => (
+                    <div
+                      key={service.slug}
+                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                      onMouseDown={() => handleServiceSelect(service)}
                     >
                       {service.name}
-                    </li>
+                    </div>
                   ))}
-                </ul>
-              )}
-              {searchQuery && filteredServices.length === 0 && (
-                <div className="absolute left-0 mt-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg z-50 px-4 py-2 text-gray-500">
-                  No services found
                 </div>
               )}
             </div>
@@ -198,6 +233,7 @@ const Navbar = ({ scrolled, darkMode, toggleDarkMode }) => {
                 )
               ))}
             </div>
+
             {/* Call Button */}
             <a
               href="tel:+918008330905"
@@ -207,6 +243,7 @@ const Navbar = ({ scrolled, darkMode, toggleDarkMode }) => {
               <Phone size={18} className="text-white relative z-10 animate-pulse" />
               <span className="relative z-10">Call Us</span>
             </a>
+
             {/* Book Now Button */}
             <button
               onClick={handleBookNow}
@@ -216,6 +253,7 @@ const Navbar = ({ scrolled, darkMode, toggleDarkMode }) => {
               <Calendar size={18} className="text-white relative z-10" />
               <span className="relative z-10">Book Now</span>
             </button>
+
             {/* Profile Dropdown */}
             <div className="relative ml-4" ref={dropdownRef}>
               <button
@@ -226,12 +264,13 @@ const Navbar = ({ scrolled, darkMode, toggleDarkMode }) => {
                   } transition-all`}
                 aria-expanded={isProfileOpen ? "true" : "false"}
               >
-                {currentUser ? (
+                {currentUser?.email ? (
                   <span className="text-lg font-bold">{currentUser.email.charAt(0).toUpperCase()}</span>
                 ) : (
                   <User size={24} />
                 )}
               </button>
+
               <AnimatePresence mode="sync">
                 {isProfileOpen && (
                   <motion.div
@@ -270,14 +309,7 @@ const Navbar = ({ scrolled, darkMode, toggleDarkMode }) => {
                               >
                                 Your Profile
                               </RouterLink>
-                              <RouterLink
-                                to="/orders"
-                                className="block px-4 py-3 text-base text-gray-700 hover:bg-gray-100"
-                                onClick={() => setIsProfileOpen(false)}
-                                role="menuitem"
-                              >
-                                Your Orders
-                              </RouterLink>
+
                               <RouterLink
                                 to="/bookings"
                                 className="block px-4 py-3 text-base text-gray-700 hover:bg-gray-100"
@@ -322,8 +354,25 @@ const Navbar = ({ scrolled, darkMode, toggleDarkMode }) => {
               </AnimatePresence>
             </div>
           </div>
+
           {/* Mobile menu buttons */}
           <div className="flex md:hidden items-center">
+            {/* Theme Toggle for Mobile */}
+            <button
+              onClick={toggleDarkMode}
+              aria-label={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              className={`p-2 rounded-full ${isScrolled
+                ? 'bg-gray-100 text-gray-700'
+                : 'bg-white/20 text-white'
+                } transition-colors mr-2`}
+            >
+              {darkMode ? (
+                <Sun size={18} />
+              ) : (
+                <Moon size={18} />
+              )}
+            </button>
+
             {/* Profile Icon for Mobile */}
             <div className="relative mr-3" ref={dropdownRef}>
               <button
@@ -334,12 +383,13 @@ const Navbar = ({ scrolled, darkMode, toggleDarkMode }) => {
                   }`}
                 aria-expanded={isProfileOpen ? "true" : "false"}
               >
-                {currentUser ? (
+                {currentUser?.email ? (
                   <span className="text-sm font-bold">{currentUser.email.charAt(0).toUpperCase()}</span>
                 ) : (
                   <User size={20} />
                 )}
               </button>
+
               <AnimatePresence mode="sync">
                 {isProfileOpen && (
                   <motion.div
@@ -413,6 +463,7 @@ const Navbar = ({ scrolled, darkMode, toggleDarkMode }) => {
                 )}
               </AnimatePresence>
             </div>
+
             <button
               onClick={toggleMenu}
               type="button"
@@ -427,6 +478,7 @@ const Navbar = ({ scrolled, darkMode, toggleDarkMode }) => {
           </div>
         </div>
       </div>
+
       {/* Mobile menu, show/hide based on menu state */}
       <AnimatePresence mode="sync">
         {isMenuOpen && (
@@ -438,45 +490,6 @@ const Navbar = ({ scrolled, darkMode, toggleDarkMode }) => {
             className="md:hidden bg-white border-t shadow-lg"
             id="mobile-menu"
           >
-            {/* Mobile Search Bar */}
-            <div className="px-4 pt-4 pb-2">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search services..."
-                  value={searchQuery}
-                  onChange={e => {
-                    setSearchQuery(e.target.value);
-                    setSelectedService(null);
-                  }}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 text-black"
-                />
-                {searchQuery && filteredServices.length > 0 && (
-                  <ul className="absolute left-0 mt-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg z-50">
-                    {filteredServices.map(service => (
-                      <li
-                        key={service.name}
-                        className="px-4 py-2 hover:bg-green-100 cursor-pointer text-black"
-                        onClick={() => {
-                          setSearchQuery(service.name);
-                          setFilteredServices([]);
-                          setSelectedService(service);
-                          setIsMenuOpen(false); // Optionally close menu on select
-                        }}
-                      >
-                        {service.name}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-                {searchQuery && filteredServices.length === 0 && (
-                  <div className="absolute left-0 mt-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg z-50 px-4 py-2 text-gray-500">
-                    No services found
-                  </div>
-                )}
-              </div>
-            </div>
-            {/* End Mobile Search Bar */}
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
               {navLinks.map((link) => (
                 link.type === 'scroll' ? (
@@ -522,14 +535,8 @@ const Navbar = ({ scrolled, darkMode, toggleDarkMode }) => {
           </motion.div>
         )}
       </AnimatePresence>
-      {/* Service Details Modal */}
-      <ServiceDetailsModal
-        service={selectedService}
-        serviceDetails={serviceDetails}
-        onClose={() => setSelectedService(null)}
-      />
     </nav>
   );
-};
+}
 
 export default Navbar;

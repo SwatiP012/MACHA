@@ -12,11 +12,11 @@ const bcrypt = require('bcryptjs');
 const mockData = {
   stats: {
     users: { total: 1478 },
-    orders: { 
-      total: 356, 
-      pending: 45, 
-      completed: 298, 
-      successRate: 84 
+    orders: {
+      total: 356,
+      pending: 45,
+      completed: 298,
+      successRate: 84
     },
     messages: { total: 42 }
   },
@@ -53,14 +53,14 @@ const adminCheck = (req, res, next) => {
       message: 'Authentication required'
     });
   }
-  
+
   if (req.user.role === 'admin') {
     return next();
   }
-  
-  return res.status(403).json({ 
+
+  return res.status(403).json({
     success: false,
-    message: 'Access denied. You must be an admin to access this resource.' 
+    message: 'Access denied. You must be an admin to access this resource.'
   });
 };
 
@@ -85,7 +85,7 @@ router.get('/stats', auth, (req, res) => {
 // Get orders with pagination
 router.get('/orders', auth, (req, res) => {
   const limit = parseInt(req.query.limit) || 10;
-  
+
   res.json({
     orders: mockData.orders.slice(0, limit),
     pagination: {
@@ -102,15 +102,15 @@ router.get('/users', auth, adminCheck, async (req, res) => {
   try {
     const { limit = 10, page = 1, search = '', role } = req.query;
     const skip = (parseInt(page) - 1) * parseInt(limit);
-    
+
     // Build query based on filters
     const query = {};
-    
+
     // Filter by role if specified
     if (role && role !== 'all') {
       query.role = role;
     }
-    
+
     // Search by name or email if provided
     if (search) {
       query.$or = [
@@ -118,17 +118,17 @@ router.get('/users', auth, adminCheck, async (req, res) => {
         { email: { $regex: search, $options: 'i' } }
       ];
     }
-    
+
     // Execute query with pagination
     const users = await User.find(query)
       .select('-password')
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(parseInt(limit));
-    
+
     // Get total count for pagination
     const total = await User.countDocuments(query);
-    
+
     res.json({
       success: true,
       users,
@@ -149,11 +149,11 @@ router.get('/users', auth, adminCheck, async (req, res) => {
 router.get('/users/:id', auth, adminCheck, async (req, res) => {
   try {
     const user = await User.findById(req.params.id).select('-password');
-    
+
     if (!user) {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
-    
+
     res.json({ success: true, user });
   } catch (error) {
     console.error('Error fetching user:', error);
@@ -165,18 +165,18 @@ router.get('/users/:id', auth, adminCheck, async (req, res) => {
 router.post('/users', auth, adminCheck, async (req, res) => {
   try {
     const { name, email, password, phoneNumber, role } = req.body;
-    
+
     // Validate input
     if (!name || !email || !password) {
       return res.status(400).json({ success: false, message: 'Name, email, and password are required' });
     }
-    
+
     // Check if user already exists
     const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser) {
       return res.status(400).json({ success: false, message: 'Email is already registered' });
     }
-    
+
     // Create user with secure password
     const user = new User({
       name,
@@ -185,13 +185,13 @@ router.post('/users', auth, adminCheck, async (req, res) => {
       phoneNumber,
       role: role || 'user'
     });
-    
+
     await user.save();
-    
+
     // Return user without password
     const userResponse = user.toObject();
     delete userResponse.password;
-    
+
     res.status(201).json({
       success: true,
       message: 'User created successfully',
@@ -207,14 +207,14 @@ router.post('/users', auth, adminCheck, async (req, res) => {
 router.put('/users/:id', auth, adminCheck, async (req, res) => {
   try {
     const { name, email, password, phoneNumber, role } = req.body;
-    
+
     // Find user
     const user = await User.findById(req.params.id);
-    
+
     if (!user) {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
-    
+
     // Check if email is already in use by another user
     if (email && email !== user.email) {
       const existingUser = await User.findOne({ email: email.toLowerCase() });
@@ -222,24 +222,24 @@ router.put('/users/:id', auth, adminCheck, async (req, res) => {
         return res.status(400).json({ success: false, message: 'Email is already in use' });
       }
     }
-    
+
     // Update fields
     if (name) user.name = name;
     if (email) user.email = email.toLowerCase();
     if (phoneNumber) user.phoneNumber = phoneNumber;
     if (role) user.role = role;
-    
+
     // Update password if provided
     if (password) {
       user.password = password; // Will be hashed by the User model pre-save hook
     }
-    
+
     await user.save();
-    
+
     // Return user without password
     const userResponse = user.toObject();
     delete userResponse.password;
-    
+
     res.json({
       success: true,
       message: 'User updated successfully',
@@ -255,21 +255,21 @@ router.put('/users/:id', auth, adminCheck, async (req, res) => {
 router.put('/users/:id/role', auth, adminCheck, async (req, res) => {
   try {
     const { role } = req.body;
-    
+
     if (!role || !['user', 'admin'].includes(role)) {
       return res.status(400).json({ success: false, message: 'Invalid role' });
     }
-    
+
     const user = await User.findByIdAndUpdate(
       req.params.id,
       { role },
       { new: true }
     ).select('-password');
-    
+
     if (!user) {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
-    
+
     res.json({
       success: true,
       message: `User role updated to ${role}`,
@@ -285,18 +285,18 @@ router.put('/users/:id/role', auth, adminCheck, async (req, res) => {
 router.delete('/users/:id', auth, adminCheck, async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
-    
+
     if (!user) {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
-    
+
     // Prevent deleting self
     if (user._id.toString() === req.user._id.toString()) {
       return res.status(400).json({ success: false, message: 'You cannot delete your own account' });
     }
-    
+
     await User.findByIdAndDelete(req.params.id);
-    
+
     res.json({
       success: true,
       message: 'User deleted successfully'
@@ -311,18 +311,18 @@ router.delete('/users/:id', auth, adminCheck, async (req, res) => {
 router.post('/users/bulk-delete', auth, adminCheck, async (req, res) => {
   try {
     const { userIds } = req.body;
-    
+
     if (!userIds || !Array.isArray(userIds) || userIds.length === 0) {
       return res.status(400).json({ success: false, message: 'No user IDs provided' });
     }
-    
+
     // Prevent deleting self
     if (userIds.includes(req.user._id.toString())) {
       return res.status(400).json({ success: false, message: 'You cannot delete your own account' });
     }
-    
+
     const result = await User.deleteMany({ _id: { $in: userIds } });
-    
+
     res.json({
       success: true,
       message: `${result.deletedCount} users deleted successfully`
@@ -337,22 +337,22 @@ router.post('/users/bulk-delete', auth, adminCheck, async (req, res) => {
 router.get('/profile', auth, adminCheck, async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select('-password');
-    
+
     if (!user) {
-      return res.status(404).json({ 
-        success: false, 
-        message: 'User not found' 
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
       });
     }
-    
+
     res.json({
       success: true,
       user
     });
   } catch (error) {
     console.error('Error fetching admin profile:', error);
-    res.status(500).json({ 
-      success: false, 
+    res.status(500).json({
+      success: false,
       message: 'Server error while fetching profile'
     });
   }
@@ -362,44 +362,44 @@ router.get('/profile', auth, adminCheck, async (req, res) => {
 router.put('/profile', auth, adminCheck, async (req, res) => {
   try {
     const { name, email, phoneNumber, address, profileImage } = req.body;
-    
+
     // Validate input
     if (!name || !email || !phoneNumber) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'Name, email, and phone number are required' 
+      return res.status(400).json({
+        success: false,
+        message: 'Name, email, and phone number are required'
       });
     }
-    
+
     // Check if email is already in use by another user
     if (email !== req.user.email) {
       const existingUser = await User.findOne({ email: email.toLowerCase() });
       if (existingUser && existingUser._id.toString() !== req.user._id.toString()) {
-        return res.status(400).json({ 
-          success: false, 
-          message: 'Email is already in use by another user' 
+        return res.status(400).json({
+          success: false,
+          message: 'Email is already in use by another user'
         });
       }
     }
-    
+
     const user = await User.findById(req.user._id);
-    
+
     if (!user) {
-      return res.status(404).json({ 
-        success: false, 
-        message: 'User not found' 
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
       });
     }
-    
+
     // Update user fields
     user.name = name;
     user.email = email.toLowerCase();
     user.phoneNumber = phoneNumber;
     user.address = address || '';
     if (profileImage) user.profileImage = profileImage;
-    
+
     await user.save();
-    
+
     res.json({
       success: true,
       message: 'Profile updated successfully',
@@ -415,8 +415,8 @@ router.put('/profile', auth, adminCheck, async (req, res) => {
     });
   } catch (error) {
     console.error('Error updating admin profile:', error);
-    res.status(500).json({ 
-      success: false, 
+    res.status(500).json({
+      success: false,
       message: 'Server error updating profile'
     });
   }
@@ -426,44 +426,44 @@ router.put('/profile', auth, adminCheck, async (req, res) => {
 router.put('/change-password', auth, adminCheck, async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
-    
+
     if (!currentPassword || !newPassword) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'Current password and new password are required' 
+      return res.status(400).json({
+        success: false,
+        message: 'Current password and new password are required'
       });
     }
-    
+
     const user = await User.findById(req.user._id);
-    
+
     if (!user) {
-      return res.status(404).json({ 
-        success: false, 
-        message: 'User not found' 
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
       });
     }
-    
+
     // Check if current password is correct
     const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'Current password is incorrect' 
+      return res.status(400).json({
+        success: false,
+        message: 'Current password is incorrect'
       });
     }
-    
+
     // Update password
     user.password = newPassword; // Will be hashed by pre-save hook
     await user.save();
-    
+
     res.json({
       success: true,
       message: 'Password updated successfully'
     });
   } catch (error) {
     console.error('Error updating admin password:', error);
-    res.status(500).json({ 
-      success: false, 
+    res.status(500).json({
+      success: false,
       message: 'Server error updating password'
     });
   }
@@ -475,7 +475,7 @@ router.post('/upload-image', auth, adminCheck, async (req, res) => {
     // Image upload logic here
     // This would typically use a library like multer for handling file uploads
     // And then upload to a service like AWS S3, Cloudinary, etc.
-    
+
     // For now, we'll just return a placeholder response
     res.json({
       success: true,
@@ -484,8 +484,8 @@ router.post('/upload-image', auth, adminCheck, async (req, res) => {
     });
   } catch (error) {
     console.error('Error uploading image:', error);
-    res.status(500).json({ 
-      success: false, 
+    res.status(500).json({
+      success: false,
       message: 'Server error uploading image'
     });
   }
@@ -496,14 +496,14 @@ router.get('/users/:id/details', auth, async (req, res) => {
   try {
     // Find user by ID
     const user = await User.findById(req.params.id).select('-password');
-    
+
     if (!user) {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
-    
+
     // Get user's orders
     const orders = await Order.find({ userId: user._id }).sort({ createdAt: -1 }).limit(10);
-    
+
     // Get user's bookings (if you have a Booking model)
     let bookings = [];
     try {
@@ -515,13 +515,13 @@ router.get('/users/:id/details', auth, async (req, res) => {
     } catch (err) {
       console.log('Bookings model not available:', err.message);
     }
-    
+
     // Get user's messages
     const messages = await Message.find({ userId: user._id }).sort({ createdAt: -1 }).limit(10);
-    
+
     // Get login history (if available)
     const loginHistory = user.loginHistory || [];
-    
+
     res.json({
       success: true,
       user,
@@ -545,14 +545,14 @@ router.get('/bookings', auth, async (req, res) => {
     const search = req.query.search;
     const startDate = req.query.startDate;
     const endDate = req.query.endDate;
-    
+
     const query = {};
-    
+
     // Apply filters
     if (status && status !== 'all') {
       query.status = status;
     }
-    
+
     if (search) {
       query.$or = [
         { 'userName': { $regex: search, $options: 'i' } },
@@ -560,7 +560,7 @@ router.get('/bookings', auth, async (req, res) => {
         { 'address': { $regex: search, $options: 'i' } }
       ];
     }
-    
+
     if (startDate && endDate) {
       query.date = {
         $gte: new Date(startDate),
@@ -571,17 +571,17 @@ router.get('/bookings', auth, async (req, res) => {
     } else if (endDate) {
       query.date = { $lte: new Date(endDate) };
     }
-    
+
     // Calculate pagination parameters
     const skip = (page - 1) * limit;
-    
+
     // Find bookings with pagination - now using the imported model directly
     const bookings = await Booking.find(query)
       .sort({ date: -1 })
       .skip(skip)
       .limit(limit)
       .populate('userId', 'name email phoneNumber');
-    
+
     // Format bookings for frontend
     const formattedBookings = bookings.map(booking => {
       return {
@@ -591,12 +591,12 @@ router.get('/bookings', auth, async (req, res) => {
         userEmail: booking.userId ? booking.userId.email : null
       };
     });
-    
+
     // Get total count for pagination
     const total = await Booking.countDocuments(query);
-    
-    res.json({ 
-      success: true, 
+
+    res.json({
+      success: true,
       bookings: formattedBookings,
       pagination: {
         total,
@@ -616,11 +616,11 @@ router.get('/bookings/:id', auth, async (req, res) => {
   try {
     const booking = await Booking.findById(req.params.id)
       .populate('userId', 'name email phoneNumber');
-      
+
     if (!booking) {
       return res.status(404).json({ success: false, message: 'Booking not found' });
     }
-    
+
     // Format booking for frontend
     const formattedBooking = {
       ...booking._doc,
@@ -628,7 +628,7 @@ router.get('/bookings/:id', auth, async (req, res) => {
       userPhone: booking.userId ? booking.userId.phoneNumber : booking.userPhone || null,
       userEmail: booking.userId ? booking.userId.email : null
     };
-    
+
     res.json({ success: true, booking: formattedBooking });
   } catch (error) {
     console.error('Error fetching booking details:', error);
@@ -640,21 +640,21 @@ router.get('/bookings/:id', auth, async (req, res) => {
 router.put('/bookings/:id/status', auth, async (req, res) => {
   try {
     const { status } = req.body;
-    
+
     if (!['pending', 'confirmed', 'completed', 'cancelled'].includes(status)) {
       return res.status(400).json({ success: false, message: 'Invalid status' });
     }
-    
+
     const booking = await Booking.findByIdAndUpdate(
       req.params.id,
       { status, updatedAt: Date.now() },
       { new: true }
     );
-    
+
     if (!booking) {
       return res.status(404).json({ success: false, message: 'Booking not found' });
     }
-    
+
     res.json({ success: true, booking });
   } catch (error) {
     console.error('Error updating booking status:', error);
@@ -666,17 +666,17 @@ router.put('/bookings/:id/status', auth, async (req, res) => {
 router.put('/bookings/:id/assign', auth, async (req, res) => {
   try {
     const { assignedTo } = req.body;
-    
+
     const booking = await Booking.findByIdAndUpdate(
       req.params.id,
       { assignedTo, updatedAt: Date.now() },
       { new: true }
     );
-    
+
     if (!booking) {
       return res.status(404).json({ success: false, message: 'Booking not found' });
     }
-    
+
     res.json({ success: true, booking });
   } catch (error) {
     console.error('Error assigning service provider:', error);
@@ -688,17 +688,17 @@ router.put('/bookings/:id/assign', auth, async (req, res) => {
 router.put('/bookings/:id/notes', auth, async (req, res) => {
   try {
     const { adminNotes } = req.body;
-    
+
     const booking = await Booking.findByIdAndUpdate(
       req.params.id,
       { adminNotes, updatedAt: Date.now() },
       { new: true }
     );
-    
+
     if (!booking) {
       return res.status(404).json({ success: false, message: 'Booking not found' });
     }
-    
+
     res.json({ success: true, booking });
   } catch (error) {
     console.error('Error updating admin notes:', error);

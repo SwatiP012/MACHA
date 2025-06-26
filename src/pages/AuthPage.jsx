@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { toast } from 'react-hot-toast';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Eye, EyeOff, User, Lock, Mail, ArrowLeft, Check, Phone } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
@@ -22,7 +23,7 @@ const AuthPage = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, loginRestaurantOwner } = useAuth();
 
   const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
@@ -33,7 +34,6 @@ const AuthPage = () => {
 
   // Check for auth tokens in URL when redirected back from Google OAuth
   useEffect(() => {
-    // Parse query parameters
     const query = new URLSearchParams(window.location.search);
     const token = query.get('token');
     const userId = query.get('userId');
@@ -41,16 +41,11 @@ const AuthPage = () => {
 
     if (error) {
       setError('Authentication failed. Please try again.');
-      // Clean up the URL
       window.history.replaceState({}, document.title, location.pathname);
       return;
     }
 
     if (token && userId) {
-      // Store token
-      localStorage.setItem('token', token);
-
-      // Fetch user data
       const fetchUserData = async () => {
         try {
           setLoading(true);
@@ -59,24 +54,20 @@ const AuthPage = () => {
           });
 
           if (response.data && response.data.user) {
-            // Login the user with context
             login(response.data.user);
 
             setSuccess('Login successful! Redirecting...');
 
-            // Redirect based on role
             if (response.data.user.role === 'admin') {
-              setTimeout(() => navigate('/admin'), 15000);
+              setTimeout(() => navigate('/admin'), 1500);
             } else {
-              setTimeout(() => navigate('/'), 15000);
+              setTimeout(() => navigate('/'), 1500);
             }
           }
         } catch (err) {
-          console.error('Error fetching user data:', err);
           setError('Error fetching user data. Please try again.');
         } finally {
           setLoading(false);
-          // Clean up the URL
           window.history.replaceState({}, document.title, location.pathname);
         }
       };
@@ -89,12 +80,9 @@ const AuthPage = () => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
 
-    // Clear specific field error when user types
     if (formErrors[name]) {
       setFormErrors(prev => ({ ...prev, [name]: '' }));
     }
-
-    // Clear general error message
     if (error) {
       setError('');
     }
@@ -103,26 +91,19 @@ const AuthPage = () => {
   const validateForm = () => {
     const errors = {};
 
-    // Validate name (only for signup)
     if (mode === 'signup' && !formData.name.trim()) {
       errors.name = 'Name is required';
     }
-
-    // Validate email
     if (!formData.email.trim()) {
       errors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       errors.email = 'Email is invalid';
     }
-
-    // Validate password
     if (!formData.password) {
       errors.password = 'Password is required';
     } else if (mode === 'signup' && formData.password.length < 8) {
       errors.password = 'Password must be at least 8 characters';
     }
-
-    // Validate phone number (only for signup)
     if (mode === 'signup') {
       if (!formData.phoneNumber) {
         errors.phoneNumber = 'Phone number is required';
@@ -137,87 +118,79 @@ const AuthPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Validate form
-    if (!validateForm()) {
-      return;
-    }
-
     setError('');
     setSuccess('');
     setLoading(true);
 
+    const { name, email, password } = formData;
+
     try {
-      // First check if server is responsive
-      let serverAvailable = false;
-      try {
-        await axios.get(`${API_BASE_URL}/health`, { timeout: 15000 });
-        serverAvailable = true;
-      } catch (healthError) {
-        console.error('Server health check failed:', healthError);
-        throw new Error('Unable to connect to the server. Please try again later or check your internet connection.');
-      }
-
+      // Try restaurant owner login first
       if (mode === 'login') {
-        // Login API call
-        const response = await axios.post(`${API_BASE_URL}/auth/login`, {
-          email: formData.email,
-          password: formData.password
-        });
-
-        if (response.data && response.data.token) {
-          // Store the JWT token
-          localStorage.setItem('token', response.data.token);
-
-          // Login the user with context
-          login(response.data.user);
-
-          // Role-based redirection - strict separation
-          if (response.data.user.role === 'admin') {
-            setSuccess('Admin login successful! Redirecting to admin panel...');
-            setTimeout(() => navigate('/admin'), 3000);
-          } else {
+        try {
+          const resOwner = await axios.post(`${API_BASE_URL}/restaurants/login`, {
+            email,
+            password,
+          });
+          if (resOwner.data && resOwner.data.restaurantId) {
+            loginRestaurantOwner(
+              {
+                _id: resOwner.data.restaurantId,
+                email: resOwner.data.owner?.email || email, // owner ka email agar mile toh
+                role: 'restaurant_owner', // YEH LINE ZARUR ADD KAREN
+                name: resOwner.data.owner?.name,
+              }, // add more fields if needed
+              resOwner.data.token // if your backend returns a token
+            );
+            toast.success('Restaurant owner login successful!');
             setSuccess('Login successful! Redirecting...');
-            setTimeout(() => navigate('/'), 3000);
+            setLoading(false);
+            // setTimeout(() => {
+            //   setLoading(false);
+            //   navigate(`/restaurant/dashboard/${resOwner.data.restaurantId}`);
+            // }, 1500);
+            return;
           }
-        } else {
-          throw new Error('Invalid response from server');
+        } catch (ownerErr) {
+          // If owner login fails, try normal user login
+        }
+
+        // Normal user login
+        try {
+          const response = await axios.post(`${API_BASE_URL}/auth/login`, {
+            email,
+            password,
+          });
+
+          toast.success('Login successful!');
+          setSuccess('Login successful! Redirecting...');
+          login(response.data.user, response.data.token);
+          setTimeout(() => navigate('/'), 1500);
+        } catch (err) {
+          if (err.response) {
+            setError(err.response.data.message || 'Authentication failed. Please check your credentials.');
+            if (err.response.status === 401) {
+              setError('Invalid email or password. Please try again.');
+            }
+          } else if (err.request) {
+            setError('Unable to connect to the server. Please try again later.');
+          } else {
+            setError('An error occurred. Please try again.');
+          }
+          toast.error(error || 'Authentication failed');
         }
       } else {
-        // Signup API call - regular users only
+        // Signup logic
         const response = await axios.post(`${API_BASE_URL}/auth/register`, {
-          name: formData.name,
-          email: formData.email,
-          password: formData.password,
-          phoneNumber: formData.phoneNumber
+          name,
+          email,
+          password,
+          phoneNumber: formData.phoneNumber,
         });
 
-        if (response.data && response.data.token) {
-          // Store the JWT token
-          localStorage.setItem('token', response.data.token);
-
-          // Login the user with context (will always be a regular user)
-          login(response.data.user);
-
-          setSuccess('Account created successfully! Redirecting...');
-          setTimeout(() => navigate('/'), 3000);
-        } else if (response.data && response.data.success) {
-          setSuccess('Registration successful! Please login to continue.');
-          setTimeout(() => navigate('/login'), 3000);
-        } else {
-          throw new Error('Failed to register');
-        }
-      }
-    } catch (err) {
-      console.error('Auth error:', err);
-      if (err.code === 'ERR_NETWORK') {
-        setError('Network error. Please check your internet connection or make sure the server is running.');
-      } else {
-        setError(
-          err.response?.data?.message ||
-          err.message ||
-          'Something went wrong. Please try again.'
-        );
+        toast.success('Account created successfully!');
+        setSuccess('Account created successfully! You can now log in.');
+        setTimeout(() => navigate('/login'), 1500);
       }
     } finally {
       setLoading(false);
@@ -273,7 +246,7 @@ const AuthPage = () => {
               {/* Name input (only for signup) */}
               {mode === 'signup' && (
                 <div>
-                  <label className="block text-sm font-medium text-black mb-1">Full Name</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
                   <div className="relative">
                     <User size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                     <input
@@ -281,7 +254,7 @@ const AuthPage = () => {
                       name="name"
                       value={formData.name}
                       onChange={handleInputChange}
-                      className={`pl-10 w-full text-black rounded-lg border ${formErrors.name ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-2 focus:ring-green-600 focus:border-green-600'} py-2.5 transition-all`}
+                      className={`pl-10 w-full rounded-lg border ${formErrors.name ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-2 focus:ring-green-600 focus:border-green-600'} py-2.5 transition-all`}
                       placeholder="John Doe"
                     />
                   </div>
@@ -293,7 +266,7 @@ const AuthPage = () => {
 
               {/* Email input */}
               <div>
-                <label className="block text-sm font-medium text-black mb-1">Email Address</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
                 <div className="relative">
                   <Mail size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                   <input
@@ -301,7 +274,7 @@ const AuthPage = () => {
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
-                    className={`pl-10 w-full text-black rounded-lg border ${formErrors.email ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-2 focus:ring-green-600 focus:border-green-600'} py-2.5 transition-all`}
+                    className={`pl-10 w-full rounded-lg border ${formErrors.email ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-2 focus:ring-green-600 focus:border-green-600'} py-2.5 transition-all`}
                     placeholder="you@example.com"
                   />
                 </div>
@@ -313,7 +286,7 @@ const AuthPage = () => {
               {/* Phone number input (only for signup) */}
               {mode === 'signup' && (
                 <div>
-                  <label className="block text-sm font-medium text-black mb-1">Phone Number</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
                   <div className="relative">
                     <Phone size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                     <input
@@ -321,7 +294,7 @@ const AuthPage = () => {
                       name="phoneNumber"
                       value={formData.phoneNumber}
                       onChange={handleInputChange}
-                      className={`pl-10 w-full text-black rounded-lg border ${formErrors.phoneNumber ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-2 focus:ring-green-600 focus:border-green-600'} py-2.5 transition-all`}
+                      className={`pl-10 w-full rounded-lg border ${formErrors.phoneNumber ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-2 focus:ring-green-600 focus:border-green-600'} py-2.5 transition-all`}
                       placeholder="9876543210"
                       maxLength="10"
                     />
@@ -334,7 +307,7 @@ const AuthPage = () => {
 
               {/* Password input */}
               <div>
-                <label className="block text-sm font-medium text-black mb-1">Password</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
                 <div className="relative">
                   <Lock size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                   <input
@@ -342,7 +315,7 @@ const AuthPage = () => {
                     name="password"
                     value={formData.password}
                     onChange={handleInputChange}
-                    className={`pl-10 w-full  text-black rounded-lg border ${formErrors.password ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-2 focus:ring-green-600 focus:border-green-600'} py-2.5 transition-all`}
+                    className={`pl-10 w-full rounded-lg border ${formErrors.password ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-2 focus:ring-green-600 focus:border-green-600'} py-2.5 transition-all`}
                     placeholder="••••••••"
                   />
                   <button
@@ -388,7 +361,7 @@ const AuthPage = () => {
                 <div className="w-full border-t border-gray-300"></div>
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-black">Or continue with</span>
+                <span className="px-2 bg-white text-gray-500">Or continue with</span>
               </div>
             </div>
 
@@ -401,7 +374,7 @@ const AuthPage = () => {
                 className="flex items-center justify-center gap-2 py-2.5 px-6 w-full border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
               >
                 <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google logo" className="w-5 h-5" />
-                <span className="text-black font-medium">Continue with Google</span>
+                <span className="font-medium">Continue with Google</span>
               </button>
             </div>
           </div>
@@ -415,6 +388,16 @@ const AuthPage = () => {
                 className="font-medium text-green-600 hover:text-green-800"
               >
                 {mode === 'login' ? 'Sign up now' : 'Log in'}
+              </Link>
+            </p>
+            {/* Restaurant registration link */}
+            <p className="text-center text-xs text-gray-500 mt-2">
+              Want to partner with us?{' '}
+              <Link
+                to="/restaurant/register"
+                className="font-medium text-green-600 hover:text-green-800"
+              >
+                Register your restaurant
               </Link>
             </p>
           </div>
