@@ -7,7 +7,7 @@ const Restaurant = require('../models/Restaurant');
 // GET all restaurants
 router.get('/restaurants', async (req, res) => {
     try {
-        const restaurants = await Restaurant.find({ isActive: true })
+        const restaurants = await Restaurant.find({})
             .select('name description cuisine address imageUrl rating deliveryTime deliveryFee minimumOrder');
 
         res.json({ success: true, restaurants });
