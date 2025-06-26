@@ -171,13 +171,13 @@ const GroceryHome = () => {
                 {/* Fresh Vegetables */}
                 <section className="mb-10">
                     <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-lg font-semibold">Fresh Vegetables</h2>
+                        <h2 className="text-lg text-black font-semibold">Fresh Vegetables</h2>
                         <Link to="/grocery/categories/1" className="text-green-600 text-sm font-medium flex items-center">
                             View all <ChevronRight size={16} className="ml-1" />
                         </Link>
                     </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
+                    <div className="grid text-black grid-cols-2 md:grid-cols-6 gap-4">
                         {isLoading ? (
                             Array(6).fill(0).map((_, i) => (
                                 <div key={i} className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
@@ -203,8 +203,8 @@ const GroceryHome = () => {
                 </section>
                 {/* Shop by benefits */}
                 <section className="mb-10">
-                    <h2 className="text-lg font-semibold mb-4">Shop by Benefits</h2>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <h2 className="text-lg text-black font-semibold mb-4">Shop by Benefits</h2>
+                    <div className="grid text-black grid-cols-2 sm:grid-cols-4 gap-4">
                         {['Organic', 'Sugar Free', 'Gluten Free', 'High Protein'].map((item, i) => (
                             <Link
                                 key={i}
@@ -225,31 +225,31 @@ const GroceryHome = () => {
 
                 {/* Features */}
                 <section className="mb-10">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="grid text-black grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="bg-white p-4 rounded-lg shadow-sm flex items-center">
                             <div className="p-3 rounded-full bg-green-100 mr-3">
                                 <span className="text-2xl">🚚</span>
                             </div>
                             <div>
-                                <h3 className="font-medium">Free Delivery</h3>
+                                <h3 className="text-black font-medium">Free Delivery</h3>
                                 <p className="text-xs text-gray-600">On orders over ₹500</p>
                             </div>
                         </div>
-                        <div className="bg-white p-4 rounded-lg shadow-sm flex items-center">
+                        <div className="text-black bg-white p-4 rounded-lg shadow-sm flex items-center">
                             <div className="p-3 rounded-full bg-blue-100 mr-3">
                                 <span className="text-2xl">🥦</span>
                             </div>
                             <div>
-                                <h3 className="font-medium">Fresh Quality</h3>
+                                <h3 className="text-black font-medium">Fresh Quality</h3>
                                 <p className="text-xs text-gray-600">100% guaranteed</p>
                             </div>
                         </div>
-                        <div className="bg-white p-4 rounded-lg shadow-sm flex items-center">
+                        <div className="text-black bg-white p-4 rounded-lg shadow-sm flex items-center">
                             <div className="p-3 rounded-full bg-purple-100 mr-3">
                                 <span className="text-2xl">💳</span>
                             </div>
                             <div>
-                                <h3 className="font-medium">Secure Payment</h3>
+                                <h3 className="text-black font-medium">Secure Payment</h3>
                                 <p className="text-xs text-gray-600">100% secure checkout</p>
                             </div>
                         </div>

@@ -90,7 +90,7 @@ const GroceryCheckout = () => {
 
         try {
             console.log('ORDER DATA:', orderData);
-            const response = await fetch(window.location.origin + '/api/grocery/orders', {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/grocery/orders`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(orderData)
@@ -99,7 +99,7 @@ const GroceryCheckout = () => {
             localStorage.removeItem('cart');
             setFormSubmitted(true);
             setTimeout(() => {
-                navigate(window.location.origin + '/grocery/orders/confirmation');
+                navigate('/grocery/orders/confirmation');
             }, 1500);
         } catch (err) {
             alert('Failed to place order. Please try again.');
