@@ -43,8 +43,8 @@ function startServer() {
     ],
     credentials: true
   }));
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
+  app.use(express.json({ limit: '10mb' }));
+  app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
   // Debug middleware to log all requests
   app.use((req, res, next) => {
