@@ -49,7 +49,17 @@ import EventManagement from './pages/services/EventManagement';
 import DigitalMarketing from './pages/services/DigitalMarketing';
 import FruitBoxSupply from './pages/services/FruitBoxSupply';
 import HomeKeeping from './pages/services/HomeKeeping';
-
+import HouseRental from './pages/services/HouseRental';
+import HomeTutors from './pages/services/HomeTutors';
+import LunchBoxSupply from './pages/services/LunchBoxSupply';
+import MedicalServices from './pages/services/MedicalServices';
+import MedicineDelivery from './pages/services/MedicineDelivery';
+import OnlineClasses from './pages/services/OnlineClasses';
+import PackersAndMovers from './pages/services/PackersAndMovers';
+import Sanitization from './pages/services/Sanitization';
+import SecurityServices from './pages/services/SecurityServices';
+import TransportServices from './pages/services/TransportServices';
+import SoftwareDevelopment from './pages/services/SoftwareDevelopment';
 
 // Import grocery page components
 import GroceryHome from './pages/grocery/index';
@@ -176,6 +186,22 @@ function App() {
             <Route path="/services/your-care" element={<YourCare />} />
             <Route path="/services/outsourcing" element={<OutsourcingDetails />} />
             <Route path="/services/organic-products" element={<OrganicProducts />} />
+            <Route path="/services/event-management" element={<EventManagement />} />
+            <Route path="/services/digital-marketing" element={<DigitalMarketing />} />
+            <Route path="/services/fruit-box-supply" element={<FruitBoxSupply />} />
+            <Route path="/services/home-keeping" element={<HomeKeeping />} />
+            <Route path="/services/house-rental" element={<HouseRental />} />
+            <Route path="/services/home-tutors" element={<HomeTutors />} />
+            <Route path="/services/lunch-box-supply" element={<LunchBoxSupply />} />
+            <Route path="/services/medical-services" element={<MedicalServices />} />
+            <Route path="/services/medicine-delivery" element={<MedicineDelivery />} />
+            <Route path="/services/online-classes" element={<OnlineClasses />} />
+            <Route path="/services/packers-and-movers" element={<PackersAndMovers />} />
+            <Route path="/services/sanitization" element={<Sanitization />} />
+            <Route path="/services/security-services" element={<SecurityServices />} />
+            <Route path="/services/transport-services" element={<TransportServices />} />
+            <Route path="/services/software-development" element={<SoftwareDevelopment />} />
+            
 
 
             {/* Keep the old routes as well for backward compatibility */}
