@@ -135,8 +135,8 @@ const Navbar = ({ scrolled, darkMode, toggleDarkMode }) => {
 
   const navLinks = [
     { name: 'Home', path: 'hero', type: 'scroll' },
-    { name: 'About', path: 'about', type: 'scroll' },
     { name: 'Services', path: 'services', type: 'scroll' },
+    { name: 'About', path: 'about', type: 'scroll' },
     { name: 'Contact', path: 'contact', type: 'scroll' },
   ];
 
@@ -358,7 +358,7 @@ const Navbar = ({ scrolled, darkMode, toggleDarkMode }) => {
           {/* Mobile menu buttons */}
           <div className="flex md:hidden items-center">
             {/* Theme Toggle for Mobile */}
-            <button
+            {/* <button
               onClick={toggleDarkMode}
               aria-label={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
               className={`p-2 rounded-full ${isScrolled
@@ -371,7 +371,7 @@ const Navbar = ({ scrolled, darkMode, toggleDarkMode }) => {
               ) : (
                 <Moon size={18} />
               )}
-            </button>
+            </button> */}
 
             {/* Profile Icon for Mobile */}
             <div className="relative mr-3" ref={dropdownRef}>
