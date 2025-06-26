@@ -189,7 +189,7 @@ function App() {
             <Route path="/services/event-management" element={<EventManagement />} />
             <Route path="/services/digital-marketing" element={<DigitalMarketing />} />
             <Route path="/services/fruit-box-supply" element={<FruitBoxSupply />} />
-            <Route path="/services/home-keeping" element={<HomeKeeping />} />
+            <Route path="/services/home-keeping-" element={<HomeKeeping />} />
             <Route path="/services/house-rental" element={<HouseRental />} />
             <Route path="/services/home-tutors" element={<HomeTutors />} />
             <Route path="/services/lunch-box-supply" element={<LunchBoxSupply />} />
@@ -201,7 +201,7 @@ function App() {
             <Route path="/services/security-services" element={<SecurityServices />} />
             <Route path="/services/transport-services" element={<TransportServices />} />
             <Route path="/services/software-development" element={<SoftwareDevelopment />} />
-            
+
 
 
             {/* Keep the old routes as well for backward compatibility */}
