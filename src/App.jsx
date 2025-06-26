@@ -31,7 +31,6 @@ import { AuthProvider } from './context/AuthContext';
 import { RestaurantProvider } from './context/RestaurantContext';
 import RestaurantMenu from './pages/food-delivery/RestaurantMenu';
 import AdminRestaurants from './pages/admin/AdminRestaurants';
-import OutsourcingDetails from "./pages/services/OutSourcing";
 
 
 // Import service page components
@@ -44,6 +43,13 @@ import Carpenter from './pages/services/Carpenter';
 import ACTechnician from './pages/services/ACTechnician';
 import ServicesPage from './pages/ServicesPage';
 import YourCare from './pages/services/YourCare';
+import OutsourcingDetails from "./pages/services/OutSourcing";
+import OrganicProducts from './pages/services/OrganicProducts';
+import EventManagement from './pages/services/EventManagement';
+import DigitalMarketing from './pages/services/DigitalMarketing';
+import FruitBoxSupply from './pages/services/FruitBoxSupply';
+import HomeKeeping from './pages/services/HomeKeeping';
+
 
 // Import grocery page components
 import GroceryHome from './pages/grocery/index';
@@ -169,6 +175,7 @@ function App() {
             </Route>
             <Route path="/services/your-care" element={<YourCare />} />
             <Route path="/services/outsourcing" element={<OutsourcingDetails />} />
+            <Route path="/services/organic-products" element={<OrganicProducts />} />
 
 
             {/* Keep the old routes as well for backward compatibility */}
