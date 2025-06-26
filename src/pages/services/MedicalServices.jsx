@@ -18,7 +18,6 @@ import {
     HeartPulse,
     Baby,
     Microscope,
-    Ambulance,
     Clock,
     User,
     ClipboardCheck,
@@ -67,7 +66,7 @@ const MedicalServices = () => {
         {
             id: 'emergency',
             title: 'Emergency Care',
-            icon: <Ambulance className="w-6 h-6" />,
+            icon: <Microscope className="w-6 h-6" />,
             description: 'Rapid response care for urgent medical situations with 24/7 availability.',
             image: 'https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
             color: 'from-red-500 to-red-600'
