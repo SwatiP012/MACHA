@@ -112,7 +112,7 @@ const OrdersManagement = () => {
     <AnimatePresence>
       {order && (
         <motion.div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40"
+          className="fixed text-black inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -131,26 +131,26 @@ const OrdersManagement = () => {
               <X size={22} />
             </button>
             <h3 className="text-xl font-bold mb-2 text-gray-800">Order Details</h3>
-            <div className="mb-2 text-sm text-gray-500">Order ID: <span className="font-mono">{order._id}</span></div>
+            <div className="mb-2 text-sm text-gray-500">Order ID: <span className="font-mono text-black">{order._id}</span></div>
             <div className="mb-2">
-              <span className="font-semibold">Customer:</span> {order.userId?.name || 'Anonymous'}
+              <span className="font-semibold text-black">Customer:</span> {order.userId?.name || 'Anonymous'}
               {order.userId?.email && (
                 <span className="ml-2 text-xs text-gray-400">{order.userId.email}</span>
               )}
             </div>
-            <div className="mb-2">
+            <div className="text-black mb-2">
               <span className="font-semibold">Date:</span> {formatDate(order.createdAt)}
             </div>
-            <div className="mb-2">
+            <div className=" text-black mb-2">
               <span className="font-semibold">Status:</span>{' '}
               <span className={`px-2 py-1 text-xs rounded-full ${getOrderStatusColor(order.status)}`}>
                 {order.status}
               </span>
             </div>
-            <div className="mb-2">
+            <div className="text-black mb-2">
               <span className="font-semibold">Total:</span> ₹{order.total?.toFixed(2) || '0.00'}
             </div>
-            <div className="mb-2">
+            <div className="text-black mb-2">
               <span className="font-semibold">Delivery Address:</span>
               <div className="ml-2 text-gray-700 text-sm">
                 {order.deliveryAddress
@@ -158,7 +158,7 @@ const OrdersManagement = () => {
                   : 'N/A'}
               </div>
             </div>
-            <div className="mb-2">
+            <div className="text-black mb-2">
               <span className="font-semibold">Items:</span>
               <ul className="ml-4 list-disc text-gray-700 text-sm">
                 {order.items && order.items.length > 0 ? (
@@ -173,7 +173,7 @@ const OrdersManagement = () => {
               </ul>
             </div>
             {order.notes && (
-              <div className="mb-2">
+              <div className="text-black mb-2">
                 <span className="font-semibold">Notes:</span> <span className="text-gray-700">{order.notes}</span>
               </div>
             )}
@@ -205,7 +205,7 @@ const OrdersManagement = () => {
       </div>
 
       {/* Filters & Search */}
-      <div className="flex flex-col md:flex-row justify-between gap-4">
+      <div className="flex text-black flex-col md:flex-row justify-between gap-4">
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => setStatusFilter('all')}
@@ -241,13 +241,13 @@ const OrdersManagement = () => {
 
         <form onSubmit={handleSearch} className="flex items-center">
           <div className="relative">
-            <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <Search size={18} className="absolute text-black left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
               placeholder="Search order or customer..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-4 py-2 border rounded-l-lg w-64 focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="pl-10 text-black pr-4 py-2 border rounded-l-lg w-64 focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
           <button
@@ -260,7 +260,7 @@ const OrdersManagement = () => {
       </div>
 
       {/* Orders Table */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="text-black bg-white rounded-lg shadow overflow-hidden">
         {loading ? (
           <div className="flex justify-center items-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div>

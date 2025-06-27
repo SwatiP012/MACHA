@@ -183,14 +183,14 @@ const AddProduct = () => {
                         <button
                             onClick={handleSubmit}
                             disabled={loading || success}
-                            className={`flex items-center px-4 py-2 rounded-lg ${loading || success
+                            className={`flex text-black items-center px-4 py-2 rounded-lg ${loading || success
                                 ? 'bg-gray-300 cursor-not-allowed'
                                 : 'bg-green-600 hover:bg-green-700 text-white'
                                 }`}
                         >
                             {loading ? (
                                 <>
-                                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></div>
+                                    <div className="animate-spin text-black rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></div>
                                     <span>Saving...</span>
                                 </>
                             ) : success ? (
@@ -222,12 +222,12 @@ const AddProduct = () => {
                     )}
 
                     <form onSubmit={handleSubmit}>
-                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div className="grid text-black grid-cols-1 lg:grid-cols-3 gap-6">
                             {/* Main Content */}
                             <div className="lg:col-span-2 space-y-6">
                                 {/* Basic Information */}
                                 <div className="bg-white rounded-xl shadow-sm p-6">
-                                    <h2 className="text-lg font-semibold mb-4">Basic Information</h2>
+                                    <h2 className="text-lg text-black font-semibold mb-4">Basic Information</h2>
 
                                     <div className="space-y-4">
                                         <div>

@@ -90,7 +90,7 @@ const CheckoutForm = ({
     };
 
     return (
-        <div className="w-full max-w-2xl mx-auto">
+        <div className="w-full text-black max-w-2xl mx-auto">
             <div className="space-y-6">
                 {/* Delivery Address Section */}
                 {!isCOD && (

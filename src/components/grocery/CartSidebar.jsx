@@ -70,7 +70,7 @@ const CartSidebar = ({
       `}>
                 {/* Header */}
                 <div className="p-4 border-b border-gray-200 flex justify-between items-center">
-                    <h2 className="text-lg font-semibold">Your Cart</h2>
+                    <h2 className="text-lg text-black font-semibold">Your Cart</h2>
                     <button
                         onClick={onClose}
                         className="p-1 rounded-full hover:bg-gray-100"
@@ -81,13 +81,13 @@ const CartSidebar = ({
                 </div>
 
                 {/* Cart content */}
-                <div className="flex flex-col h-[calc(100%-170px)] overflow-hidden flex-grow">
+                <div className="flex flex-col text-black h-[calc(100%-170px)] overflow-hidden flex-grow">
                     {cartItems.length === 0 ? (
                         <div className="flex-grow flex flex-col items-center justify-center p-4">
                             <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-3">
                                 <ShoppingBag size={24} className="text-gray-400" />
                             </div>
-                            <h3 className="text-lg font-medium mb-2">Your cart is empty</h3>
+                            <h3 className="text-lg text-black font-medium mb-2">Your cart is empty</h3>
                             <p className="text-gray-500 text-sm text-center mb-4">
                                 Add items to your cart to see them here
                             </p>

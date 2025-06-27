@@ -83,8 +83,8 @@ const GroceryNavBar = () => {
 
     return (
         <nav className={`fixed w-full top-0 left-0 z-50 transition-all duration-200 ${isScrolled || !isHomePage
-                ? 'bg-white shadow-lg py-3'
-                : 'bg-gradient-to-r from-green-800 to-green-600 py-4'
+                ? 'bg-white shadow-lg py-2'
+                : 'bg-gradient-to-r from-green-800 to-green-600 py-2'
             }`}>
             <div className="container mx-auto px-4">
                 <div className="flex justify-between items-center gap-7">

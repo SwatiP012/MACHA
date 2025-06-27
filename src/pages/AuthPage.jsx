@@ -203,7 +203,7 @@ const AuthPage = () => {
         <title>{mode === 'login' ? 'Login' : 'Sign Up'} | MACHA Services</title>
       </Helmet>
 
-      <div className="w-full max-w-md">
+      <div className="w-full text-black max-w-md">
         <Link to="/" className="flex items-center gap-2 text-green-700 mb-6 group">
           <ArrowLeft size={18} className="transition-transform group-hover:-translate-x-1" />
           <span>Back to home</span>

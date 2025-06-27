@@ -12,9 +12,11 @@ const OrdersPage = () => {
     const [filter, setFilter] = useState('all');
     const [searchTerm, setSearchTerm] = useState('');
 
+    const API_URL = import.meta.env.VITE_API_URL; // should be https://macha-3dve.onrender.com/api
+
     useEffect(() => {
         setIsLoading(true);
-        axios.get('/api/grocery/user/orders', { withCredentials: true })
+        axios.get(`${API_URL}/grocery/user/orders`, { withCredentials: true })
             .then(res => {
                 const mapped = res.data.orders.map(order => ({
                     id: order._id,
@@ -58,10 +60,10 @@ const OrdersPage = () => {
         <div className="bg-gray-50 min-h-screen pb-16">
             <GroceryNavBar />
             <div className="container mx-auto px-4 py-6">
-                <h1 className="text-2xl font-bold mb-6">My Orders</h1>
+                <h1 className="text-2xl text-black font-bold mb-6">My Orders</h1>
 
                 {/* Search and Filter */}
-                <div className="mb-6 flex flex-col md:flex-row gap-4">
+                <div className="mb-6 text-black flex flex-col md:flex-row gap-4">
                     <div className="relative flex-grow">
                         <input
                             type="text"
@@ -95,7 +97,7 @@ const OrdersPage = () => {
 
                 {/* Orders List */}
                 {isLoading ? (
-                    <div className="flex justify-center items-center py-20">
+                    <div className="flex text-black justify-center items-center py-20">
                         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500"></div>
                     </div>
                 ) : filteredOrders.length > 0 ? (
@@ -104,7 +106,7 @@ const OrdersPage = () => {
                             <Link
                                 key={order.id}
                                 to={`/grocery/orders/${order.id}`}
-                                className="block bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow"
+                                className="block text-black bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow"
                             >
                                 <div className="flex justify-between items-start">
                                     <div>

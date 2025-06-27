@@ -310,17 +310,17 @@ const RestaurantDashboard = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                     <div className="bg-white rounded-lg shadow-sm p-6">
                         <h3 className="text-lg font-semibold text-gray-700 mb-2">Total Orders</h3>
-                        <p className="text-3xl font-bold">{stats.totalOrders}</p>
+                        <p className="text-3xl text-black font-bold">{stats.totalOrders}</p>
                         <p className="text-sm text-gray-500 mt-2">All time orders</p>
                     </div>
                     <div className="bg-white rounded-lg shadow-sm p-6">
                         <h3 className="text-lg font-semibold text-gray-700 mb-2">Revenue</h3>
-                        <p className="text-3xl font-bold">{formatCurrency(stats.totalRevenue)}</p>
+                        <p className="text-3xl text-black font-bold">{formatCurrency(stats.totalRevenue)}</p>
                         <p className="text-sm text-gray-500 mt-2">Total earnings</p>
                     </div>
                     <div className="bg-white rounded-lg shadow-sm p-6">
                         <h3 className="text-lg font-semibold text-gray-700 mb-2">Pending Orders</h3>
-                        <p className="text-3xl font-bold">{stats.pendingOrders}</p>
+                        <p className="text-3xl text-black font-bold">{stats.pendingOrders}</p>
                         <p className="text-sm text-gray-500 mt-2">Need attention</p>
                     </div>
                 </div>

@@ -163,7 +163,7 @@ const EditProduct = () => {
             </div>
 
             {/* Page header */}
-            <div className="bg-white rounded-xl shadow-sm mb-6 p-6">
+            <div className="bg-white text-black rounded-xl shadow-sm mb-6 p-6">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
                         <h1 className="text-2xl font-bold text-gray-800">
@@ -231,11 +231,11 @@ const EditProduct = () => {
                         {/* Main product info */}
                         <div className="lg:col-span-2 space-y-6">
                             <div className="bg-white rounded-xl shadow-sm p-6">
-                                <h2 className="text-lg font-semibold mb-4">Basic Information</h2>
+                                    <h2 className="text-lg text-black font-semibold mb-4">Basic Information</h2>
 
-                                <div className="space-y-4">
+                                <div className="space-y-4 ">
                                     <div>
-                                        <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                                            <label htmlFor="name" className="block text-sm font-medium text-black mb-1">
                                             Product Name <span className="text-red-500">*</span>
                                         </label>
                                         <input
@@ -245,12 +245,12 @@ const EditProduct = () => {
                                             value={product.name}
                                             onChange={handleInputChange}
                                             required
-                                            className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                className="w-full text-black border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         />
                                     </div>
 
                                     <div>
-                                        <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+                                            <label htmlFor="description" className="block text-sm text-black font-medium text-gray-700 mb-1">
                                             Description
                                         </label>
                                         <textarea
@@ -259,11 +259,11 @@ const EditProduct = () => {
                                             value={product.description}
                                             onChange={handleInputChange}
                                             rows="4"
-                                            className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                className="w-full border text-black border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         ></textarea>
                                     </div>
 
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="grid text-black grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
                                             <label htmlFor="sku" className="block text-sm font-medium text-gray-700 mb-1">
                                                 SKU <span className="text-red-500">*</span>
@@ -301,7 +301,7 @@ const EditProduct = () => {
                                     </div>
 
                                     <div>
-                                        <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
+                                            <label htmlFor="category" className="block text-black text-sm font-medium mb-1">
                                             Category <span className="text-red-500">*</span>
                                         </label>
                                         <div className="relative">
@@ -312,7 +312,7 @@ const EditProduct = () => {
                                                 value={product.category}
                                                 onChange={handleInputChange}
                                                 required
-                                                className="w-full pl-10 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                    className="w-full pl-10 text-black border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                             >
                                                 <option value="">Select a category</option>
                                                 {categories.map(category => (
@@ -327,10 +327,10 @@ const EditProduct = () => {
                             </div>
 
                             <div className="bg-white rounded-xl shadow-sm p-6">
-                                <h2 className="text-lg font-semibold mb-4">Pricing</h2>
+                                    <h2 className="text-lg text-black font-semibold mb-4">Pricing</h2>
 
                                 <div className="space-y-4">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="grid text-black grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
                                             <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-1">
                                                 Selling Price <span className="text-red-500">*</span>
@@ -346,7 +346,7 @@ const EditProduct = () => {
                                                     required
                                                     min="0"
                                                     step="0.01"
-                                                    className="w-full pl-10 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                        className="w-full text-black pl-10 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                                 />
                                             </div>
                                         </div>
@@ -365,13 +365,13 @@ const EditProduct = () => {
                                                     onChange={handleInputChange}
                                                     min="0"
                                                     step="0.01"
-                                                    className="w-full pl-10 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                        className="w-full pl-10 text-black border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                                 />
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="grid text-black grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
                                             <label htmlFor="discount" className="block text-sm font-medium text-gray-700 mb-1">
                                                 Discount (%)
@@ -386,7 +386,7 @@ const EditProduct = () => {
                                                     onChange={handleInputChange}
                                                     min="0"
                                                     max="100"
-                                                    className="w-full pl-10 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                        className="w-full text-black pl-10 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                                 />
                                             </div>
                                         </div>
@@ -404,7 +404,7 @@ const EditProduct = () => {
                                                     value={product.tax}
                                                     onChange={handleInputChange}
                                                     min="0"
-                                                    className="w-full pl-10 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                        className="w-full text-black pl-10 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                                 />
                                             </div>
                                         </div>
@@ -422,7 +422,7 @@ const EditProduct = () => {
                             </div>
 
                             <div className="bg-white rounded-xl shadow-sm p-6">
-                                <h2 className="text-lg font-semibold mb-4">Product Images</h2>
+                                    <h2 className="text-lg text-black font-semibold mb-4">Product Images</h2>
 
                                 <div className="space-y-4">
                                     <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
@@ -453,7 +453,7 @@ const EditProduct = () => {
                                     </div>
 
                                     {product.images.length > 0 && (
-                                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-4">
+                                            <div className="grid text-black grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-4">
                                             {product.images.map((image, index) => (
                                                 <div key={index} className="relative group">
                                                     <img
@@ -479,7 +479,7 @@ const EditProduct = () => {
                         {/* Sidebar - Inventory and Settings */}
                         <div className="space-y-6">
                             <div className="bg-white rounded-xl shadow-sm p-6">
-                                <h2 className="text-lg font-semibold mb-4">Inventory</h2>
+                                    <h2 className="text-lg text-black font-semibold mb-4">Inventory</h2>
 
                                 <div className="space-y-4">
                                     <div>
@@ -496,7 +496,7 @@ const EditProduct = () => {
                                                 onChange={handleInputChange}
                                                 required
                                                 min="0"
-                                                className="w-full pl-10 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                    className="w-full text-black pl-10 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                             />
                                         </div>
                                     </div>
@@ -514,7 +514,7 @@ const EditProduct = () => {
                                                 value={product.minStock}
                                                 onChange={handleInputChange}
                                                 min="0"
-                                                className="w-full pl-10 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                    className="w-full text-black pl-10 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                             />
                                             <p className="text-xs text-gray-500 mt-1">
                                                 You'll be notified when stock falls below this level
@@ -525,7 +525,7 @@ const EditProduct = () => {
                             </div>
 
                             <div className="bg-white rounded-xl shadow-sm p-6">
-                                <h2 className="text-lg font-semibold mb-4">Product Status</h2>
+                                    <h2 className="text-lg text-black font-semibold mb-4">Product Status</h2>
 
                                 <div className="space-y-4">
                                     <div className="flex items-center justify-between">
@@ -567,7 +567,7 @@ const EditProduct = () => {
                             </div>
 
                             <div className="bg-white rounded-xl shadow-sm p-6">
-                                <h2 className="text-lg font-semibold mb-4">Danger Zone</h2>
+                                    <h2 className="text-lg text-black font-semibold mb-4">Danger Zone</h2>
 
                                 <button
                                     type="button"

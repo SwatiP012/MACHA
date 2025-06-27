@@ -185,12 +185,7 @@ export const FoodDeliveryProvider = ({ children }) => {
                 throw new Error('No restaurant selected for this order');
             }
 
-            const order = await foodDeliveryService.placeOrder({
-                ...orderData,
-                items: cart,
-                restaurantId: cartRestaurant.id,
-                restaurantName: cartRestaurant.name
-            });
+            const order = await foodDeliveryService.placeOrder(orderData);
 
             // Clear cart after successful order
             clearCart();

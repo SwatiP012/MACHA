@@ -1,108 +1,109 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+// Add at the top
 
-const orderSchema = new mongoose.Schema({
-  orderId: {
+const orderItemSchema = new Schema({
+  menuItemId: {
+    type: Schema.Types.ObjectId
+  },
+  name: {
     type: String,
-    unique: true,
     required: true
   },
+  price: {
+    type: Number,
+    required: true
+  },
+  quantity: {
+    type: Number,
+    required: true,
+    min: 1
+  },
+  isVegetarian: Boolean,
+  instructions: String
+});
+
+const orderSchema = new Schema({
   userId: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'User',
-    default: null
+    required: true
   },
-  customerName: {
+  restaurantId: {
+    type: Schema.Types.ObjectId,
+    ref: 'Restaurant',
+    required: true
+  },
+  restaurantName: {
     type: String,
-    required: true,
-    trim: true
+    required: true
   },
-  email: {
-    type: String,
-    required: true,
-    trim: true
+  items: [orderItemSchema],
+  subTotal: {
+    type: Number,
+    required: true
   },
-  phone: {
-    type: String,
-    required: true,
-    trim: true
+  deliveryFee: {
+    type: Number,
+    required: true
   },
-  serviceType: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  items: [{
-    name: String,
-    quantity: Number,
-    price: Number
-  }],
-  totalAmount: {
+  total: {
     type: Number,
     required: true
   },
   deliveryAddress: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  deliveryCoordinates: {
-    lat: {
+    addressLine1: {
       type: String,
-      default: ''
+      required: true
     },
-    lng: {
+    addressLine2: String,
+    city: {
       type: String,
-      default: ''
-    }
+      required: true
+    },
+    state: {
+      type: String,
+      required: true
+    },
+    pincode: {
+      type: String,
+      required: true
+    },
+    landmark: String
   },
   paymentMethod: {
     type: String,
-    enum: ['cash', 'card', 'upi', 'wallet'],
+    enum: ['cash', 'online', 'wallet'],
     default: 'cash'
   },
   paymentStatus: {
     type: String,
-    enum: ['pending', 'completed', 'failed', 'refunded'],
+    enum: ['pending', 'completed', 'failed'],
     default: 'pending'
   },
   status: {
     type: String,
-    enum: ['pending', 'confirmed', 'processing', 'completed', 'cancelled'],
+    enum: ['pending', 'confirmed', 'preparing', 'out_for_delivery', 'delivered', 'cancelled'],
     default: 'pending'
   },
-  assignedTo: {
-    type: String,
-    default: ''
+  specialInstructions: String,
+  estimatedDeliveryTime: Date,
+  deliveredAt: Date,
+  deliveryPersonId: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
   },
-  notes: {
-    type: String,
-    default: ''
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now
+  cancellationReason: String,
+  feedback: {
+    rating: {
+      type: Number,
+      min: 1,
+      max: 5
+    },
+    comment: String
   }
-});
+}, { timestamps: true });
 
-// Function to generate a unique order ID with a specific format
-orderSchema.pre('save', async function(next) {
-  try {
-    if (!this.orderId) {
-      const count = await mongoose.model('Order').countDocuments();
-      const randomDigits = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
-      const timestamp = Date.now().toString().slice(-6);
-      this.orderId = `ORD-${timestamp}-${randomDigits}-${count + 1}`;
-    }
-    
-    this.updatedAt = Date.now();
-    next();
-  } catch (error) {
-    next(error);
-  }
-});
+const Order = mongoose.model('Order', orderSchema);
 
-module.exports = mongoose.model('Order', orderSchema);
+module.exports = Order;

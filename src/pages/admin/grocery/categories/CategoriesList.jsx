@@ -178,7 +178,7 @@ const CategoriesList = () => {
                             <input
                                 type="text"
                                 placeholder="Search categories..."
-                                className="pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-64"
+                                className="pl-10 pr-4 text-black py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-64"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
@@ -399,7 +399,7 @@ const CategoriesList = () => {
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div className="bg-white rounded-lg max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
                         <div className="flex justify-between items-center mb-4">
-                            <h2 className="text-xl font-semibold">Add New Category</h2>
+                            <h2 className="text-xl text-black font-semibold">Add New Category</h2>
                             <button onClick={() => {
                                 setIsAddModalOpen(false);
                                 setNewCategory({
@@ -430,7 +430,7 @@ const CategoriesList = () => {
                                 <input
                                     type="text"
                                     id="categoryName"
-                                    className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full text-black border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     placeholder="Enter category name"
                                     value={newCategory.name}
                                     onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
@@ -443,7 +443,7 @@ const CategoriesList = () => {
                                 </label>
                                 <textarea
                                     id="categoryDescription"
-                                    className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full text-black border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     placeholder="Enter category description"
                                     rows="3"
                                     value={newCategory.description}
@@ -531,7 +531,7 @@ const CategoriesList = () => {
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div className="bg-white rounded-lg max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
                         <div className="flex justify-between items-center mb-4">
-                            <h2 className="text-xl font-semibold">Edit Category</h2>
+                            <h2 className="text-xl text-black font-semibold">Edit Category</h2>
                             <button onClick={() => {
                                 setIsEditModalOpen(false);
                                 setSelectedCategory(null);
@@ -557,7 +557,7 @@ const CategoriesList = () => {
                                 <input
                                     type="text"
                                     id="editCategoryName"
-                                    className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full text-black border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     placeholder="Enter category name"
                                     value={selectedCategory.name}
                                     onChange={(e) => setSelectedCategory({ ...selectedCategory, name: e.target.value })}
@@ -570,7 +570,7 @@ const CategoriesList = () => {
                                 </label>
                                 <textarea
                                     id="editCategoryDescription"
-                                    className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full text-black border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     placeholder="Enter category description"
                                     rows="3"
                                     value={selectedCategory.description || ''}

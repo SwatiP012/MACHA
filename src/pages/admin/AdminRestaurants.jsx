@@ -43,11 +43,11 @@ const AdminRestaurants = () => {
 
     return (
         <div>
-            <h1 className="text-2xl font-bold mb-4">Restaurants</h1>
+            <h1 className="text-2xl text-black font-bold mb-4">Restaurants</h1>
             {loading ? (
                 <div>Loading...</div>
             ) : (
-                <table className="min-w-full bg-white">
+                <table className="min-w-full text-black bg-white">
                     <thead>
                         <tr>
                             <th className="py-2 px-4">Name</th>

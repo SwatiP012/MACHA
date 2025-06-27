@@ -10,9 +10,11 @@ const OrderDetailsPage = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [showFullItemsList, setShowFullItemsList] = useState(false);
 
+    const API_URL = import.meta.env.VITE_API_URL;
+
     useEffect(() => {
         setIsLoading(true);
-        axios.get(`/api/grocery/orders/${id}`, { withCredentials: true })
+        axios.get(`${API_URL}/grocery/orders/${id}`, { withCredentials: true })
             .then(res => {
                 const order = res.data;
                 setOrderDetails({
@@ -60,10 +62,10 @@ const OrderDetailsPage = () => {
         const trackingSteps = orderDetails.trackingSteps;
         return (
             <div className="bg-white p-4 rounded-lg shadow-sm mb-4">
-                <h2 className="font-semibold mb-3">Order Status</h2>
+                <h2 className="font-semibold text-black mb-3">Order Status</h2>
                 <div>
                     {trackingSteps.map((step, index) => (
-                        <div key={index} className="flex items-start mb-3 last:mb-0">
+                        <div key={index} className="flex text-black items-start mb-3 last:mb-0">
                             <div className="mr-3 relative">
                                 <div className={`w-6 h-6 rounded-full ${step.completed ? 'bg-green-500' : 'bg-gray-300'} flex items-center justify-center`}>
                                     {step.completed && <Check className="h-4 w-4 text-white" />}
@@ -73,7 +75,7 @@ const OrderDetailsPage = () => {
                                 )}
                             </div>
                             <div>
-                                <p className="text-sm font-medium">{step.label}</p>
+                                <p className="text-sm text-black font-medium">{step.label}</p>
                                 <p className="text-xs text-gray-500">{step.timestamp}</p>
                             </div>
                         </div>
@@ -85,7 +87,7 @@ const OrderDetailsPage = () => {
 
     if (isLoading) {
         return (
-            <div className="flex justify-center items-center min-h-screen">
+            <div className="flex justify-center text-black items-center min-h-screen">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500"></div>
             </div>
         );
@@ -93,10 +95,10 @@ const OrderDetailsPage = () => {
 
     if (!orderDetails) {
         return (
-            <div className="bg-gray-50 min-h-screen p-4 flex flex-col items-center justify-center">
+            <div className="bg-gray-50 min-h-screen p-4 text-black flex flex-col items-center justify-center">
                 <div className="bg-white p-6 rounded-lg shadow-sm text-center max-w-md">
                     <AlertTriangle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-                    <h2 className="text-xl font-semibold mb-2">Order Not Found</h2>
+                    <h2 className="text-xl text-black font-semibold mb-2">Order Not Found</h2>
                     <p className="text-gray-600 mb-6">
                         We couldn't find the order you're looking for. It may have been removed or the ID is incorrect.
                     </p>
@@ -119,7 +121,7 @@ const OrderDetailsPage = () => {
                         <button onClick={() => navigate('/grocery/orders')} className="flex items-center">
                             <ArrowLeft className="h-6 w-6 text-gray-700" />
                         </button>
-                        <h1 className="text-lg font-semibold">Order Details</h1>
+                        <h1 className="text-lg text-black font-semibold">Order Details</h1>
                         <div className="w-6"></div>
                     </div>
                 </div>
@@ -129,7 +131,7 @@ const OrderDetailsPage = () => {
                 <div className="bg-white p-4 rounded-lg shadow-sm mb-4">
                     <div className="flex justify-between items-center">
                         <div>
-                            <h2 className="font-semibold">Order #{orderDetails.id}</h2>
+                            <h2 className="font-semibold text-black">Order #{orderDetails.id}</h2>
                             <p className="text-sm text-gray-500">{orderDetails.date}</p>
                         </div>
                         {orderDetails.status === 'delivered' && (
@@ -144,7 +146,7 @@ const OrderDetailsPage = () => {
                 {renderTrackingView()}
 
                 <div className="bg-white p-4 rounded-lg shadow-sm mb-4">
-                    <h2 className="font-semibold mb-3">Order Items</h2>
+                    <h2 className="font-semibold text-black mb-3">Order Items</h2>
                     <div className="space-y-3">
                         {orderDetails.items.slice(0, showFullItemsList ? orderDetails.items.length : 3).map((item, index) => (
                             <div key={index} className="flex justify-between pb-3 border-b border-gray-100 last:border-0 last:pb-0">
@@ -155,11 +157,11 @@ const OrderDetailsPage = () => {
                                         <div className="h-12 w-12 bg-gray-100 rounded mr-3" />
                                     )}
                                     <div>
-                                        <p className="text-sm font-medium">{item.name}</p>
+                                        <p className="text-sm text-black font-medium">{item.name}</p>
                                         <p className="text-xs text-gray-500">{item.unit} x {item.quantity}</p>
                                     </div>
                                 </div>
-                                <span className="text-sm">₹{(item.price * item.quantity).toFixed(2)}</span>
+                                <span className="text-sm text-black">₹{(item.price * item.quantity).toFixed(2)}</span>
                             </div>
                         ))}
 
@@ -183,14 +185,14 @@ const OrderDetailsPage = () => {
                 </div>
 
                 <div className="bg-white p-4 rounded-lg shadow-sm mb-4">
-                    <h2 className="font-semibold mb-3">Payment Summary</h2>
+                    <h2 className="font-semibold text-black mb-3">Payment Summary</h2>
                     <div className="space-y-2 text-sm">
-                        <div className="flex justify-between">
+                        <div className="flex text-black justify-between">
                             <span className="text-gray-600">Item Total</span>
                             <span>₹{orderDetails.subtotal.toFixed(2)}</span>
                         </div>
                         {orderDetails.discount > 0 && (
-                            <div className="flex justify-between">
+                            <div className="flex text-black justify-between">
                                 <span className="text-gray-600">Discount</span>
                                 <span className="text-green-600">-₹{orderDetails.discount.toFixed(2)}</span>
                             </div>
@@ -203,7 +205,7 @@ const OrderDetailsPage = () => {
                                 <span className="text-green-600">Free</span>
                             )}
                         </div>
-                        <div className="border-t border-gray-100 pt-2 mt-2 font-medium flex justify-between">
+                        <div className="border-t text-black border-gray-100 pt-2 mt-2 font-medium flex justify-between">
                             <span>Total Amount</span>
                             <span>₹{orderDetails.total.toFixed(2)}</span>
                         </div>
@@ -213,11 +215,11 @@ const OrderDetailsPage = () => {
                     </p>
                 </div>
                 <div className="bg-white p-4 rounded-lg shadow-sm mb-4">
-                    <h2 className="font-semibold mb-3">Delivery Address</h2>
+                    <h2 className="font-semibold text-black mb-3">Delivery Address</h2>
                     <div className="flex items-start">
                         <MapPin className="h-5 w-5 text-gray-500 mr-2 mt-0.5 flex-shrink-0" />
                         <div>
-                            <p className="text-sm font-medium">{orderDetails.deliveryAddress.name}</p>
+                            <p className="text-sm text-black font-medium">{orderDetails.deliveryAddress.name}</p>
                             <p className="text-sm text-gray-500">{orderDetails.deliveryAddress.phone}</p>
                             <p className="text-sm text-gray-600 mt-1">
                                 {orderDetails.deliveryAddress.address}
@@ -229,7 +231,7 @@ const OrderDetailsPage = () => {
                     </div>
                 </div>
                 <div className="bg-white p-4 rounded-lg shadow-sm">
-                    <h2 className="font-semibold mb-3">Need Help?</h2>
+                    <h2 className="font-semibold text-black mb-3">Need Help?</h2>
                     <div className="space-y-3">
                         <Link to="/grocery/help" className="flex items-center text-sm text-gray-700 p-2 border border-gray-200 rounded-lg">
                             <MessageSquare className="h-5 w-5 text-gray-500 mr-3" />

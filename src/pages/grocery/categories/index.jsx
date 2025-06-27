@@ -11,6 +11,7 @@ const CategoriesPage = () => {
     const [categories, setCategories] = useState([]);
     const [productsByCategory, setProductsByCategory] = useState({});
     const [fetchError, setFetchError] = useState(null);
+    const API_URL = import.meta.env.VITE_API_URL; // should be https://macha-3dve.onrender.com/api
 
     useEffect(() => {
         // Fetch categories and products from backend
@@ -19,13 +20,13 @@ const CategoriesPage = () => {
             setFetchError(null);
             try {
                 // Fetch all categories
-                const catRes = await fetch('/api/grocery/categories');
+                const catRes = await fetch(`${API_URL}/grocery/categories`);
                 if (!catRes.ok) throw new Error('Failed to fetch categories');
                 const categoriesData = await catRes.json();
                 setCategories(categoriesData);
 
                 // Fetch all products
-                const prodRes = await fetch('/api/grocery/products?limit=1000');
+                const prodRes = await fetch(`${API_URL}/grocery/products?limit=1000`);
                 if (!prodRes.ok) throw new Error('Failed to fetch products');
                 const prodData = await prodRes.json();
                 const allProducts = prodData.products || prodData;
@@ -94,7 +95,7 @@ const CategoriesPage = () => {
             <GroceryNavBar />
 
             <div className="container mx-auto px-4 py-6">
-                <h1 className="text-2xl font-bold mb-6">All Categories</h1>
+                <h1 className="text-2xl text-black font-bold mb-6">All Categories</h1>
 
                 {/* Error Fallback */}
                 {fetchError && (
@@ -104,9 +105,9 @@ const CategoriesPage = () => {
                 )}
 
                 {/* Categories Grid */}
-                <div className="mb-10">
+                <div className="text-black mb-10">
                     {isLoading ? (
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                        <div className="grid text-black grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                             {[...Array(8)].map((_, i) => (
                                 <div key={i} className="bg-white rounded-xl overflow-hidden shadow h-48 animate-pulse flex flex-col items-center justify-center">
                                     <div className="w-20 h-20 rounded-full bg-gray-200 mb-3"></div>
@@ -118,7 +119,7 @@ const CategoriesPage = () => {
                     ) : categories.length === 0 ? (
                         <div className="text-gray-500">No categories found.</div>
                     ) : (
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                        <div className="text-black grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                             {categories.map(category => (
                                 <Link
                                     key={category._id}
@@ -150,7 +151,7 @@ const CategoriesPage = () => {
 
                 {/* Products by Category */}
                 {!isLoading && categories.map(category => (
-                    <section className="mb-10" key={category._id}>
+                    <section className="text-black mb-10" key={category._id}>
                         <ProductGrid
                             title={`${category.name}${category.icon ? ' ' + category.icon : ''}`}
                             products={productsByCategory[category._id] || []}

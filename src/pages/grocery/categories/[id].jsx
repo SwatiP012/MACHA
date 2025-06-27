@@ -17,21 +17,17 @@ const CategoryDetailPage = () => {
     const [showFilters, setShowFilters] = useState(false);
     const [activeFilters, setActiveFilters] = useState([]);
     const [sortBy, setSortBy] = useState('popular');
+    const API_URL = import.meta.env.VITE_API_URL;
 
     useEffect(() => {
         // Fetch category and products from backend
         const fetchData = async () => {
             setLoading(true);
             try {
-                const [catRes, prodRes] = await Promise.all([
-                    fetch(`/api/grocery/categories/${categoryId}`),
-                    fetch(`/api/grocery/products?categoryId=${categoryId}`)
-                ]);
+                const catRes = await fetch(`${API_URL}/grocery/categories/${categoryId}`);
                 const catData = await catRes.json();
-                const prodData = await prodRes.json();
-                setCategory(catData);
-                // Support both array and {products: []} response
-                setProducts(Array.isArray(prodData) ? prodData : prodData.products || []);
+                setCategory(catData.category || catData);
+                setProducts(catData.products || []);
             } catch (err) {
                 setCategory(null);
                 setProducts([]);
@@ -159,7 +155,7 @@ const CategoryDetailPage = () => {
                 <div className="container mx-auto px-4 py-6">
                     <div className="h-8 w-48 bg-gray-200 animate-pulse rounded mb-6"></div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <div className="grid text-black grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         {[...Array(8)].map((_, i) => (
                             <div key={i} className="bg-white rounded-lg p-4 shadow-sm animate-pulse">
                                 <div className="h-40 bg-gray-200 rounded mb-4"></div>
@@ -252,7 +248,7 @@ const CategoryDetailPage = () => {
                             <select
                                 value={sortBy}
                                 onChange={(e) => setSortBy(e.target.value)}
-                                className="appearance-none pl-3 pr-8 py-1.5 rounded-md border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-green-300"
+                                className="appearance-none text-black  pl-3 pr-8 py-1.5 rounded-md border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-green-300"
                             >
                                 <option value="popular">Popular</option>
                                 <option value="price-low">Price: Low to High</option>
@@ -285,12 +281,12 @@ const CategoryDetailPage = () => {
                 {showFilters && (
                     <div className="bg-white p-4 rounded-lg shadow-sm mb-6 border border-gray-100">
                         <h3 className="font-medium mb-3">Filter by Tags</h3>
-                        <div className="flex flex-wrap gap-3">
+                        <div className="flex text-black flex-wrap gap-3">
                             {availableFilters.map(filter => (
                                 <button
                                     key={filter}
                                     onClick={() => toggleFilter(filter)}
-                                    className={`px-3 py-1.5 rounded-md text-sm ${activeFilters.includes(filter)
+                                    className={`px-3 text-black py-1.5 rounded-md text-sm ${activeFilters.includes(filter)
                                         ? 'bg-green-100 text-green-700'
                                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                         }`}
@@ -304,7 +300,7 @@ const CategoryDetailPage = () => {
 
                 {/* Product grid */}
                 {filteredProducts.length > 0 ? (
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <div className="grid text-black grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         {filteredProducts.map(product => {
                             const cartItem = cartItems.find(item => item._id === product._id);
                             return (

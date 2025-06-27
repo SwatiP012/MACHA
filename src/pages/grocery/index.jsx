@@ -21,6 +21,8 @@ const GroceryHome = () => {
     const [topDeals, setTopDeals] = useState([]);
     const [freshVegetables, setFreshVegetables] = useState([]);
 
+    const API_URL = import.meta.env.VITE_API_URL; 
+
     useEffect(() => {
         setIsLoading(true);
 
@@ -97,7 +99,7 @@ const GroceryHome = () => {
                 <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=1440')] bg-cover bg-center opacity-10"></div>
                 <div className="container mx-auto px-4 relative">
                     <div className="max-w-3xl mx-auto text-center">
-                        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">Fresh Groceries Delivered To Your Doorstep</h1>
+                        <h1 className="text-3xl  md:text-4xl lg:text-5xl font-bold text-white mb-4">Fresh Groceries Delivered To Your Doorstep</h1>
                         <p className="text-lg md:text-xl text-green-50 mb-6">Shop quality groceries at affordable prices</p>
                         {/* Search bar */}
                         {/* ...existing search bar code... */}
@@ -107,16 +109,16 @@ const GroceryHome = () => {
 
             <div className="container mx-auto px-4 pb-20">
                 {/* Categories section */}
-                <section className="mb-10">
+                <section className="text-black mb-10">
                     <CategoryList horizontal={true} />
                 </section>
 
                 {/* Featured Products */}
-                <section className="mb-10">
+                <section className="text-black mb-10">
                     <ProductGrid
                         title="Featured Products"
                         products={featuredProducts}
-                        viewAllLink="/grocery/categories"
+                        viewAllLink={`${API_URL}/grocery/categories`}
                         loading={isLoading}
                         cols={4}
                         onAddToCart={handleAddToCart}
@@ -124,7 +126,7 @@ const GroceryHome = () => {
                 </section>
 
                 {/* Special Offers Banner */}
-                <section className="mb-10">
+                <section className="text-black mb-10">
                     <div className="bg-yellow-500 rounded-xl overflow-hidden shadow-md">
                         <div className="flex flex-col md:flex-row">
                             <div className="p-6 md:p-10 md:w-2/3">
@@ -139,7 +141,7 @@ const GroceryHome = () => {
                                     Offer valid for new customers only.
                                 </p>
                                 <Link
-                                    to="/grocery/categories"
+                                    to={`${API_URL}/grocery/categories`}
                                     className="inline-flex items-center bg-white text-yellow-700 px-6 py-2.5 rounded-lg font-medium hover:bg-yellow-50 transition-colors"
                                 >
                                     Shop Now <ArrowRight size={18} className="ml-2" />
@@ -157,11 +159,11 @@ const GroceryHome = () => {
                 </section>
 
                 {/* Top Deals */}
-                <section className="mb-10">
+                <section className="text-black mb-10">
                     <ProductGrid
                         title="Top Deals"
                         products={topDeals}
-                        viewAllLink="/grocery/categories"
+                        viewAllLink={`${API_URL}/grocery/categories`}
                         loading={isLoading}
                         cols={4}
                         onAddToCart={handleAddToCart}
@@ -172,7 +174,7 @@ const GroceryHome = () => {
                 <section className="mb-10">
                     <div className="flex justify-between items-center mb-4">
                         <h2 className="text-lg text-black font-semibold">Fresh Vegetables</h2>
-                        <Link to="/grocery/categories/1" className="text-green-600 text-sm font-medium flex items-center">
+                        <Link to={`${API_URL}/grocery/categories`} className="text-green-600 text-sm font-medium flex items-center">
                             View all <ChevronRight size={16} className="ml-1" />
                         </Link>
                     </div>
@@ -208,7 +210,7 @@ const GroceryHome = () => {
                         {['Organic', 'Sugar Free', 'Gluten Free', 'High Protein'].map((item, i) => (
                             <Link
                                 key={i}
-                                to={`/grocery/search?q=${item}`}
+                                to={`${API_URL}/grocery/search?q=${item}`}
                                 className="bg-white rounded-lg p-3 shadow-sm flex flex-col items-center text-center hover:shadow-md transition-all"
                             >
                                 <div className={`w-12 h-12 rounded-full mb-2 ${['bg-green-100', 'bg-blue-100', 'bg-yellow-100', 'bg-purple-100'][i]

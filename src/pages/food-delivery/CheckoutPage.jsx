@@ -101,39 +101,51 @@ const CheckoutPage = () => {
         setError(null);
 
         try {
-            // Create order object with the necessary data
+            // Build deliveryAddress object as expected by backend
             const deliveryAddress = {
-                addressLine1: address.street, // <-- map street to addressLine1
-                area: address.area,
-                landmark: address.landmark,
+                addressLine1: address.street,
+                addressLine2: address.area || "",
+                landmark: address.landmark || "",
                 city: address.city,
                 state: address.state,
-                pincode: address.pincode,
-                fullName: address.fullName,
-                phone: address.phone,
-                type: address.type,
+                pincode: address.pincode
             };
 
             // Map payment method for backend
             let backendPaymentMethod = paymentMethod;
             if (paymentMethod === 'cod') backendPaymentMethod = 'cash';
+            if (paymentMethod === 'upi') backendPaymentMethod = 'online'; // if your backend expects 'online'
+
+            // Map cart items to backend schema
+            const items = cart.map(item => ({
+                menuItemId: item.id, // or item.menuItemId if available
+                name: item.name,
+                price: item.price,
+                quantity: item.quantity,
+                isVegetarian: item.veg, // if available
+                instructions: item.instructions || ""
+            }));
 
             const orderData = {
+                orderId: uuidv4(), // or any unique string
                 restaurantId: cartRestaurant?._id || cartRestaurant?.id,
-                items: cart,
+                restaurantName: cartRestaurant?.name,
+                items,
                 deliveryAddress,
                 paymentMethod: backendPaymentMethod,
                 specialInstructions: '',
-                total: totalWithTip,
+                totalAmount: totalWithTip, // required by backend
                 deliveryFee: cartTotals.deliveryFee,
                 subTotal: cartTotals.subtotal,
+                serviceType: "food-delivery", // required by backend
+                phone: address.phone, // required by backend
+                email: currentUser?.email, // required by backend
+                customerName: address.fullName || currentUser?.displayName // required by backend
             };
 
 
-            // Place the order using the context function
-            // ...existing code...
             const orderResponse = await placeOrder(orderData);
-            console.log('Order placed:', orderResponse); // For debugging
+            console.log('Order placed:', orderResponse);
 
             if (orderResponse && orderResponse.order && (orderResponse.order._id || orderResponse.order.id)) {
                 navigate('/food-delivery/order-confirmation', { state: { orderId: orderResponse.order._id || orderResponse.order.id } });
@@ -178,7 +190,7 @@ const CheckoutPage = () => {
                         <ArrowLeft size={16} className="mr-2" />
                         <span>Back to Restaurants</span>
                     </Link>
-                    <h1 className="text-2xl font-bold text-center flex-grow pr-16">Checkout</h1>
+                    <h1 className="text-2xl text-black font-bold text-center flex-grow pr-16">Checkout</h1>
                 </div>
 
                 {error && (
@@ -187,7 +199,7 @@ const CheckoutPage = () => {
                     </div>
                 )}
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="grid text-black  grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Left column - Delivery info */}
                     <div className="lg:col-span-2">
                         <motion.div

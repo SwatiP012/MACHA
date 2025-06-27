@@ -203,7 +203,7 @@ const MenuItemForm = () => {
 
     if (!currentUser) {
         return (
-            <div className="min-h-screen bg-gray-50 pt-28 pb-10 px-4">
+            <div className="min-h-screen  bg-gray-50 pt-28 pb-10 px-4">
                 <div className="container mx-auto max-w-md text-center">
                     <div className="bg-white p-8 rounded-lg shadow-sm">
                         <AlertCircle size={48} className="mx-auto text-red-500 mb-4" />
@@ -211,7 +211,7 @@ const MenuItemForm = () => {
                         <p className="mb-6 text-gray-600">
                             Please sign in or create an account to manage menu items.
                         </p>
-                        <div className="flex flex-col space-y-3">
+                        <div className="flex text-black flex-col space-y-3">
                             <Link to="/login" className="py-2 px-4 bg-green-600 text-white rounded-lg hover:bg-green-700">
                                 Sign In
                             </Link>
@@ -234,7 +234,7 @@ const MenuItemForm = () => {
     }
 
     return (
-        <div className="min-h-screen  pb-10">
+        <div className="min-h-screen  bg-gray-50 pb-10">
             <Helmet>
                 <title>
                     {isEdit ? 'Edit Menu Item' : 'Add Menu Item'} | MACHA Restaurant
@@ -286,7 +286,7 @@ const MenuItemForm = () => {
                                 <h2 className="text-lg font-bold text-green-800 mb-4 pb-2 border-b border-green-100">
                                     Item Information
                                 </h2>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="grid text-black grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="col-span-2">
                                         <label className="block text-sm font-semibold text-green-700 mb-1">
                                             Name<span className="text-red-500">*</span>

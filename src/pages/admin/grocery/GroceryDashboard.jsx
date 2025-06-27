@@ -129,14 +129,14 @@ const GroceryDashboard = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 <div className="bg-white rounded-xl shadow-sm p-6">
                     <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-sm font-medium text-gray-500 uppercase">Products</h3>
+                        <h3 className="text-sm font-medium text-black uppercase">Products</h3>
                         <div className="p-2 rounded-lg bg-blue-50 text-blue-600">
                             <Package size={20} />
                         </div>
                     </div>
-                    <p className="text-2xl font-bold">
+                    <p className="text-2xl text-black font-bold">
                         {loading ? (
-                            <span className="h-8 w-16 bg-gray-200 rounded animate-pulse inline-block"></span>
+                            <span className="h-8 w-16 bg-gray-200 text-black rounded animate-pulse inline-block"></span>
                         ) : (
                             stats.products
                         )}
@@ -150,12 +150,12 @@ const GroceryDashboard = () => {
 
                 <div className="bg-white rounded-xl shadow-sm p-6">
                     <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-sm font-medium text-gray-500 uppercase">Total Orders</h3>
+                        <h3 className="text-sm font-medium text-black uppercase">Total Orders</h3>
                         <div className="p-2 rounded-lg bg-green-50 text-green-600">
                             <ShoppingBag size={20} />
                         </div>
                     </div>
-                    <p className="text-2xl font-bold">
+                    <p className="text-2xl text-black font-bold">
                         {loading ? (
                             <span className="h-8 w-16 bg-gray-200 rounded animate-pulse inline-block"></span>
                         ) : (
@@ -171,12 +171,12 @@ const GroceryDashboard = () => {
 
                 <div className="bg-white rounded-xl shadow-sm p-6">
                     <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-sm font-medium text-gray-500 uppercase">Revenue</h3>
+                        <h3 className="text-sm font-medium text-black uppercase">Revenue</h3>
                         <div className="p-2 rounded-lg bg-purple-50 text-purple-600">
                             <DollarSign size={20} />
                         </div>
                     </div>
-                    <p className="text-2xl font-bold">
+                    <p className="text-2xl text-black font-bold">
                         {loading ? (
                             <span className="h-8 w-16 bg-gray-200 rounded animate-pulse inline-block"></span>
                         ) : (
@@ -192,12 +192,12 @@ const GroceryDashboard = () => {
 
                 <div className="bg-white rounded-xl shadow-sm p-6">
                     <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-sm font-medium text-gray-500 uppercase">Customers</h3>
+                        <h3 className="text-sm font-medium text-black uppercase">Customers</h3>
                         <div className="p-2 rounded-lg bg-yellow-50 text-yellow-600">
                             <Users size={20} />
                         </div>
                     </div>
-                    <p className="text-2xl font-bold">
+                    <p className="text-2xl text-black font-bold">
                         {loading ? (
                             <span className="h-8 w-16 bg-gray-200 rounded animate-pulse inline-block"></span>
                         ) : (
@@ -212,9 +212,9 @@ const GroceryDashboard = () => {
 
             {/* Quick Access Links */}
             <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
-                <h2 className="text-lg font-semibold mb-6">Quick Actions</h2>
+                <h2 className="text-lg text-black font-semibold mb-6">Quick Actions</h2>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="grid text-black grid-cols-2 md:grid-cols-4 gap-4">
                     <Link to="/admin/grocery/products/add" className="flex flex-col items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                         <Package size={24} className="text-blue-600 mb-2" />
                         <span className="text-sm font-medium">Add Product</span>
@@ -239,7 +239,7 @@ const GroceryDashboard = () => {
 
             {/* Order Status */}
             <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
-                <h2 className="text-lg font-semibold mb-6">Order Status Overview</h2>
+                <h2 className="text-lg text-black font-semibold mb-6">Order Status Overview</h2>
 
                 {loading ? (
                     <div className="h-20 bg-gray-200 rounded animate-pulse"></div>
@@ -267,7 +267,7 @@ const GroceryDashboard = () => {
             </div>
 
             {/* Low Stock Alert */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
+            <div className="bg-white text-black rounded-xl shadow-sm p-6">
                 <div className="flex items-start">
                     <div className="p-2 bg-red-100 rounded-lg mr-4">
                         <AlertCircle size={24} className="text-red-600" />

@@ -173,7 +173,7 @@ const InventoryManagement = () => {
                             <input
                                 type="text"
                                 placeholder="Search inventory..."
-                                className="pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-64"
+                                className="pl-10 text-black pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-64"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
@@ -235,7 +235,7 @@ const InventoryManagement = () => {
                 {/* Filter Section */}
                 {isFilterOpen && (
                     <div className="mt-4 pt-4 border-t border-gray-100">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div className="grid text-black grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
                                 <select
@@ -293,8 +293,8 @@ const InventoryManagement = () => {
                 <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
                     <div className="flex items-start justify-between">
                         <div>
-                            <p className="text-gray-500 text-sm">Total Products</p>
-                            <h3 className="text-2xl font-semibold mt-1">{inventorySummary.totalItems}</h3>
+                            <p className="text-black text-sm">Total Products</p>
+                            <h3 className="text-2xl text-black font-semibold mt-1">{inventorySummary.totalItems}</h3>
                         </div>
                         <div className="p-2 bg-blue-100 rounded-lg">
                             <Package className="h-6 w-6 text-blue-600" />
@@ -305,8 +305,8 @@ const InventoryManagement = () => {
                 <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
                     <div className="flex items-start justify-between">
                         <div>
-                            <p className="text-gray-500 text-sm">Low Stock Items</p>
-                            <h3 className="text-2xl font-semibold mt-1">{inventorySummary.lowStockItems}</h3>
+                            <p className="text-black text-sm">Low Stock Items</p>
+                            <h3 className="text-2xl text-black font-semibold mt-1">{inventorySummary.lowStockItems}</h3>
                         </div>
                         <div className="p-2 bg-yellow-100 rounded-lg">
                             <AlertTriangle className="h-6 w-6 text-yellow-600" />
@@ -317,8 +317,8 @@ const InventoryManagement = () => {
                 <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
                     <div className="flex items-start justify-between">
                         <div>
-                            <p className="text-gray-500 text-sm">Out of Stock</p>
-                            <h3 className="text-2xl font-semibold mt-1">{inventorySummary.outOfStockItems}</h3>
+                            <p className="text-black text-sm">Out of Stock</p>
+                            <h3 className="text-2xl text-black font-semibold mt-1">{inventorySummary.outOfStockItems}</h3>
                         </div>
                         <div className="p-2 bg-red-100 rounded-lg">
                             <X className="h-6 w-6 text-red-600" />
@@ -329,8 +329,8 @@ const InventoryManagement = () => {
                 <div className="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
                     <div className="flex items-start justify-between">
                         <div>
-                            <p className="text-gray-500 text-sm">Overstocked</p>
-                            <h3 className="text-2xl font-semibold mt-1">{inventorySummary.overStockedItems}</h3>
+                            <p className="text-black text-sm">Overstocked</p>
+                            <h3 className="text-2xl text-black font-semibold mt-1">{inventorySummary.overStockedItems}</h3>
                         </div>
                         <div className="p-2 bg-green-100 rounded-lg">
                             <Clipboard className="h-6 w-6 text-green-600" />

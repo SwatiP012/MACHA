@@ -143,7 +143,7 @@ const AdminSecurity = () => {
                   name="currentPassword"
                   value={formData.currentPassword}
                   onChange={handleInputChange}
-                  className={`pl-10 w-full rounded-lg border ${formErrors.currentPassword ? 'border-red-300' : 'border-gray-300'} py-2.5 focus:ring-2 focus:ring-green-600 focus:border-green-600 transition-all pr-10`}
+                  className={`pl-10 text-black w-full rounded-lg border ${formErrors.currentPassword ? 'border-red-300' : 'border-gray-300'} py-2.5 focus:ring-2 focus:ring-green-600 focus:border-green-600 transition-all pr-10`}
                   placeholder="Enter current password"
                 />
                 <button
@@ -168,7 +168,7 @@ const AdminSecurity = () => {
                   name="newPassword"
                   value={formData.newPassword}
                   onChange={handleInputChange}
-                  className={`pl-10 w-full rounded-lg border ${formErrors.newPassword ? 'border-red-300' : 'border-gray-300'} py-2.5 focus:ring-2 focus:ring-green-600 focus:border-green-600 transition-all pr-10`}
+                  className={`pl-10 text-black w-full rounded-lg border ${formErrors.newPassword ? 'border-red-300' : 'border-gray-300'} py-2.5 focus:ring-2 focus:ring-green-600 focus:border-green-600 transition-all pr-10`}
                   placeholder="Enter new password"
                 />
                 <button
@@ -193,7 +193,7 @@ const AdminSecurity = () => {
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
-                  className={`pl-10 w-full rounded-lg border ${formErrors.confirmPassword ? 'border-red-300' : 'border-gray-300'} py-2.5 focus:ring-2 focus:ring-green-600 focus:border-green-600 transition-all pr-10`}
+                  className={`pl-10 text-black w-full rounded-lg border ${formErrors.confirmPassword ? 'border-red-300' : 'border-gray-300'} py-2.5 focus:ring-2 focus:ring-green-600 focus:border-green-600 transition-all pr-10`}
                   placeholder="Confirm new password"
                 />
                 <button

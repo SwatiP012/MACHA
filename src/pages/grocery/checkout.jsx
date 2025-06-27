@@ -99,7 +99,7 @@ const GroceryCheckout = () => {
             localStorage.removeItem('cart');
             setFormSubmitted(true);
             setTimeout(() => {
-                navigate('/grocery/orders/confirmation');
+                navigate('${import.meta.env.VITE_API_URL}/grocery/orders/confirmation');
             }, 1500);
         } catch (err) {
             alert('Failed to place order. Please try again.');
@@ -132,33 +132,33 @@ const GroceryCheckout = () => {
                         ) : (
                             <div className="bg-white rounded-xl shadow-sm overflow-hidden">
                                 <div className="border-b border-gray-200">
-                                    <h1 className="text-2xl font-bold p-6">Checkout</h1>
+                                    <h1 className="text-2xl text-black font-bold p-6">Checkout</h1>
                                 </div>
 
                                 <form onSubmit={handleSubmit} className="p-6">
                                     {/* Cash on Delivery Details */}
                                     {paymentMethod === 'Cash on Delivery' && (
                                         <div className="mb-8">
-                                            <h2 className="text-xl font-semibold mb-4">Customer Details</h2>
+                                            <h2 className="text-xl text-black font-semibold mb-4">Customer Details</h2>
                                             <div className="mb-4">
-                                                <label className="block text-sm font-medium mb-1">Name</label>
+                                                <label className="block text-black text-sm font-medium mb-1">Name</label>
                                                 <input
                                                     type="text"
                                                     value={customerName}
                                                     onChange={e => setCustomerName(e.target.value)}
-                                                    className={`w-full border rounded-lg p-2 ${nameError ? 'border-red-500' : 'border-gray-300'}`}
+                                                    className={`w-full border text-black rounded-lg p-2 ${nameError ? 'border-red-500' : 'border-gray-300'}`}
                                                     placeholder="Enter your name"
                                                     required
                                                 />
                                                 {nameError && <div className="text-red-500 text-sm mt-1">{nameError}</div>}
                                             </div>
                                             <div className="mb-4">
-                                                <label className="block text-sm font-medium mb-1">Contact Number</label>
+                                                    <label className="block text-black text-sm font-medium mb-1">Contact Number</label>
                                                 <input
                                                     type="tel"
                                                     value={contactNumber}
                                                     onChange={e => setContactNumber(e.target.value)}
-                                                    className={`w-full border rounded-lg p-2 ${contactError ? 'border-red-500' : 'border-gray-300'}`}
+                                                    className={`w-full border text-black rounded-lg p-2 ${contactError ? 'border-red-500' : 'border-gray-300'}`}
                                                     placeholder="Enter your contact number"
                                                     required
                                                 />
@@ -168,7 +168,7 @@ const GroceryCheckout = () => {
                                     )}
 
                                     {/* Delivery Address */}
-                                    <div className="mb-8">
+                                        <div className="text-black mb-8">
                                         <h2 className="text-xl font-semibold mb-4">Delivery Address</h2>
                                         <div className="space-y-4">
                                             <div className="relative">
@@ -198,7 +198,7 @@ const GroceryCheckout = () => {
                                     </div>
 
                                     {/* Delivery Options */}
-                                    <div className="mb-8">
+                                        <div className="text-black mb-8">
                                         <h2 className="text-xl font-semibold mb-4">Delivery Options</h2>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <label className={`border ${deliveryTime === 'standard' ? 'border-green-500 bg-green-50' : 'border-gray-200'} rounded-lg p-4 flex cursor-pointer`}>
@@ -251,7 +251,7 @@ const GroceryCheckout = () => {
                                     </div>
 
                                     {/* Payment Method */}
-                                    <div className="mb-8">
+                                        <div className="text-black mb-8">
                                         <h2 className="text-xl font-semibold mb-4">Payment Method</h2>
                                         <div className="space-y-3">
                                             <label className={`border ${paymentMethod === 'card' ? 'border-green-500 bg-green-50' : 'border-gray-200'} rounded-lg p-4 flex cursor-pointer`}>
@@ -340,10 +340,10 @@ const GroceryCheckout = () => {
                         <div className="w-full md:w-[360px] lg:w-[400px] flex-shrink-0">
                             <div className="bg-white rounded-xl shadow-sm overflow-hidden sticky top-28">
                                 <div className="border-b border-gray-200">
-                                    <h2 className="text-xl font-semibold p-6">Order Summary</h2>
+                                    <h2 className="text-xl text-black font-semibold p-6">Order Summary</h2>
                                 </div>
                                 {/* Cart Items */}
-                                <div className="p-6 border-b border-gray-200">
+                                <div className="p-6 text-black border-b border-gray-200">
                                     <div className="space-y-4">
                                         {cartItems.length === 0 ? (
                                             <p className="text-gray-500">Your cart is empty.</p>
@@ -370,7 +370,7 @@ const GroceryCheckout = () => {
                                     </div>
                                 </div>
                                 {/* Price Breakdown */}
-                                <div className="p-6">
+                                <div className="text-black p-6">
                                     <div className="space-y-3 text-gray-600">
                                         <div className="flex justify-between">
                                             <span>Subtotal</span>
@@ -389,7 +389,7 @@ const GroceryCheckout = () => {
                                     <div className="mt-6 p-4 bg-gray-50 rounded-lg">
                                         <div className="flex items-center mb-2">
                                             <Calendar className="text-gray-500 mr-2" size={16} />
-                                            <span className="font-medium">Estimated Delivery</span>
+                                            <span className="font-medium text-black">Estimated Delivery</span>
                                         </div>
                                         <p className="text-sm text-gray-600">
                                             {deliveryTime === 'express' ? 'Today within 90 minutes' : 'Today within 3-4 hours'}

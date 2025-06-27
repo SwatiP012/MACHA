@@ -69,7 +69,7 @@ const GroceryCart = () => {
 
             <div className="container mx-auto px-4 py-8 pt-28">
                 <div className="flex items-center justify-between mb-6">
-                    <h1 className="text-2xl font-bold">Your Cart</h1>
+                    <h1 className="text-2xl text-black font-bold">Your Cart</h1>
                     <Link to="/grocery" className="text-green-600 hover:text-green-700 flex items-center">
                         <span>Continue Shopping</span>
                         <ArrowRight size={16} className="ml-1" />
@@ -86,7 +86,7 @@ const GroceryCart = () => {
                         <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-4">
                             <ShoppingBag size={32} className="text-gray-400" />
                         </div>
-                        <h2 className="text-xl font-semibold mb-2">Your cart is empty</h2>
+                        <h2 className="text-xl text-black font-semibold mb-2">Your cart is empty</h2>
                         <p className="text-gray-600 mb-8 text-center">
                             Looks like you haven't added any products to your cart yet.
                         </p>
@@ -98,7 +98,7 @@ const GroceryCart = () => {
                         </Link>
                     </div>
                 ) : (
-                    <div className="flex flex-col lg:flex-row gap-8">
+                    <div className="flex text-black flex-col lg:flex-row gap-8">
                         {/* Cart Items */}
                         <div className="flex-grow">
                             <div className="bg-white rounded-xl shadow-sm overflow-hidden">
